@@ -33,12 +33,18 @@ Plus:
 
 Download `Ada-Setup-x.y.z.exe` from the [Releases](https://github.com/Yemresalcan/ada-notch/releases) page and run it (no admin rights needed; installs to `%LOCALAPPDATA%\Programs\Ada`). A portable `ada.exe` is attached too.
 
-> **Note (Windows SmartScreen):** Because the executable is not code-signed, Windows SmartScreen may show a warning on first run. Click **More info → Run anyway** to launch Ada.
-
 ### Requirements
 
 - Windows 10 (version 1903 or newer) or Windows 11
 - 64-bit (x64)
+
+### Why does my browser or Windows warn about the download?
+
+- **Open-source builds:** Ada is open source, and release files are built directly from this repository by [GitHub Actions](https://github.com/Yemresalcan/ada-notch/actions).
+- **Why it happens:** The executable is not code-signed yet and is new, so browsers (Chrome/Edge "uncommon download") and Microsoft Defender SmartScreen ("Windows protected your PC") warn about files they have not seen often. It is a reputation warning, not a virus detection. Code signing for the project is planned.
+- **How to proceed:** In the browser choose **Keep** / **Keep anyway**; in SmartScreen click **More info → Run anyway**.
+- **How to verify the file:** Every release has `SHA256SUMS.txt`; in PowerShell run `Get-FileHash .\Ada-Setup-<version>.exe -Algorithm SHA256` and compare the output with the value in that file.
+- **Optional scan:** You can also scan the file on [VirusTotal](https://www.virustotal.com).
 
 ## Usage
 
@@ -143,12 +149,18 @@ Ek olarak:
 
 [Releases](https://github.com/Yemresalcan/ada-notch/releases) sayfasından `Ada-Setup-x.y.z.exe` dosyasını indirip çalıştırın (yönetici izni gerekmez; `%LOCALAPPDATA%\Programs\Ada` dizinine kurulur). Kurulumsuz kullanmak isteyenler için taşınabilir `ada.exe` dosyası da sürümlere eklenmiştir.
 
-> **Not (Windows SmartScreen):** Uygulama kod imzalı olmadığı için ilk çalıştırmada Windows SmartScreen uyarısı görünebilir. Başlatmak için **Ek bilgi → Yine de çalıştır** (*More info → Run anyway*) seçeneğine tıklayın.
-
 #### Gereksinimler
 
 - Windows 10 (sürüm 1903 veya üzeri) ya da Windows 11
 - 64-bit (x64)
+
+### İndirirken tarayıcı veya Windows neden uyarı veriyor?
+
+- **Açık kaynak derlemeler:** Ada açık kaynaklıdır ve sürüm dosyaları doğrudan bu depodan [GitHub Actions](https://github.com/Yemresalcan/ada-notch/actions) tarafından derlenir.
+- **Uyarının nedeni:** Çalıştırılabilir dosya henüz kod imzalı değildir ve yenidir; bu nedenle tarayıcılar (Chrome/Edge "yaygın olarak indirilmiyor" / "uncommon download") ve Microsoft Defender SmartScreen ("Windows kişisel bilgisayarınızı korudu" / "Windows protected your PC") sık görülmemiş dosyalar için uyarı gösterir. Bu bir virüs tespiti değil, itibar (reputation) uyarısıdır. Proje için kod imzalama planlanmaktadır.
+- **Nasıl devam edilir:** Tarayıcıda **Sakla** / **Yine de sakla** (*Keep* / *Keep anyway*) seçeneğini seçin; SmartScreen ekranında **Ek bilgi → Yine de çalıştır** (*More info → Run anyway*) düğmesine tıklayın.
+- **Dosyayı doğrulama:** Her sürümde `SHA256SUMS.txt` dosyası bulunur; PowerShell'de `Get-FileHash .\Ada-Setup-<version>.exe -Algorithm SHA256` komutunu çalıştırıp sonucu bu dosyadaki değerle karşılaştırın.
+- **İsteğe bağlı tarama:** Dilerseniz dosyayı [VirusTotal](https://www.virustotal.com) üzerinde de taratabilirsiniz.
 
 ### Kullanım
 

@@ -77,6 +77,13 @@ struct App {
     page_shift: Spring,
     last_frame: Instant,
     animating: bool,
+    /// Current TIMER_ANIM period: 1 ms while springs move, ~30 fps for ambient
+    /// animation only (audio bars, mascot).
+    anim_interval: u32,
+    /// Last window region applied, to skip redundant SetWindowRgn calls.
+    last_region: (i32, i32, i32),
+    /// True while hidden because a fullscreen app (game, video, slideshow) is in front.
+    hidden_for_fullscreen: bool,
     hovering: bool,
     keyboard: bool,
     pages: Vec<Box<dyn Page>>,
@@ -250,18 +257,63 @@ impl App {
         self.expand.target > 0.5 && self.expand.value > 0.85
     }
 
-    fn update_region(&self) {
+    fn update_region(&mut self) {
         let p = self.panel();
         let (_, ear) = corner_radii(self.height_t());
         let s = self.scale;
+        let left = ((p.x - ear - 1.0) * s).floor() as i32;
+        let right = ((p.right() + ear + 1.0) * s).ceil() as i32;
+        let bottom = ((p.bottom() + 1.0) * s).ceil() as i32;
+        // SetWindowRgn makes DWM recompose the window; skip it when nothing changed
+        // (ambient animations redraw every frame without resizing).
+        if (left, right, bottom) == self.last_region {
+            return;
+        }
+        self.last_region = (left, right, bottom);
         unsafe {
-            let rgn = CreateRectRgn(
-                ((p.x - ear - 1.0) * s).floor() as i32,
-                0,
-                ((p.right() + ear + 1.0) * s).ceil() as i32,
-                ((p.bottom() + 1.0) * s).ceil() as i32,
-            );
+            let rgn = CreateRectRgn(left, 0, right, bottom);
             SetWindowRgn(self.hwnd, rgn, true);
+        }
+    }
+
+    /// Runs the animation timer at `interval_ms` (re-arming it if the period changes).
+    fn set_anim_interval(&mut self, interval_ms: u32) {
+        if self.anim_interval != interval_ms {
+            self.anim_interval = interval_ms;
+            unsafe {
+                SetTimer(self.hwnd, TIMER_ANIM, interval_ms, None);
+            }
+        }
+    }
+
+    /// Windows can drop a topmost window below normal windows (e.g. after an app
+    /// leaves fullscreen or the shell restarts). Re-assert our place every tick,
+    /// and step aside while a fullscreen app is in front.
+    fn guard_z_order(&mut self) {
+        let fullscreen = unsafe {
+            matches!(
+                SHQueryUserNotificationState(),
+                Ok(QUNS_BUSY) | Ok(QUNS_RUNNING_D3D_FULL_SCREEN) | Ok(QUNS_PRESENTATION_MODE)
+            )
+        };
+        if fullscreen != self.hidden_for_fullscreen {
+            self.hidden_for_fullscreen = fullscreen;
+            unsafe {
+                let _ = ShowWindow(self.hwnd, if fullscreen { SW_HIDE } else { SW_SHOWNOACTIVATE });
+            }
+        }
+        if !fullscreen {
+            unsafe {
+                let _ = SetWindowPos(
+                    self.hwnd,
+                    HWND_TOPMOST,
+                    0,
+                    0,
+                    0,
+                    0,
+                    SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER,
+                );
+            }
         }
     }
 
@@ -269,10 +321,8 @@ impl App {
         if !self.animating {
             self.animating = true;
             self.last_frame = Instant::now();
-            unsafe {
-                SetTimer(self.hwnd, TIMER_ANIM, 1, None);
-            }
         }
+        self.set_anim_interval(1);
     }
 
     fn set_expanded(&mut self, expanded: bool) {
@@ -310,9 +360,13 @@ impl App {
         self.redraw();
         if !a && !b && !c && !d {
             self.animating = false;
+            self.anim_interval = 0;
             unsafe {
                 let _ = KillTimer(self.hwnd, TIMER_ANIM);
             }
+        } else if !a && !b {
+            // Only ambient animation left: 30 fps is plenty and saves CPU.
+            self.set_anim_interval(33);
         }
     }
 
@@ -602,6 +656,7 @@ impl App {
     }
 
     fn on_tick(&mut self) {
+        self.guard_z_order();
         let st = unsafe { GetLocalTime() };
         let battery = read_battery();
         let mut redraw = st.wMinute != self.minute
@@ -1017,6 +1072,9 @@ pub fn run() -> Result<()> {
             page_shift: Spring::new(0.0, 420.0, 40.0),
             last_frame: Instant::now(),
             animating: false,
+            anim_interval: 0,
+            last_region: (0, 0, 0),
+            hidden_for_fullscreen: false,
             hovering: false,
             keyboard: false,
             pages: Vec::new(),

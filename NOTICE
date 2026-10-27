@@ -1,0 +1,31 @@
+Ada — Copyright 2026 Yunus Emre Salcan. Licensed under the Apache License 2.0.
+
+========================================================================
+Third-Party Notices, Assets, and Data Sources
+========================================================================
+
+1. Waving Hand Image — Microsoft Fluent Emoji
+   Source: https://github.com/microsoft/fluentui-emoji
+   Copyright (c) Microsoft Corporation.
+   Licensed under the MIT License.
+
+2. Synced Lyrics — LRCLIB
+   Source: https://lrclib.net
+   Lyrics are fetched at runtime from the public LRCLIB API.
+
+3. Weather Forecast Data — MET Norway Locationforecast API
+   Source: https://api.met.no
+   Weather data from MET Norway, licensed under the Creative Commons
+   Attribution 4.0 International (CC BY 4.0) license and the Norwegian
+   Licence for Open Government Data (NLOD).
+
+4. IP Geolocation — ipwho.is
+   Source: https://ipwho.is
+   Approximate city/coordinates for weather lookup are resolved via ipwho.is.
+
+5. Rust Crates
+   - windows / windows-core (https://github.com/microsoft/windows-rs)
+     Copyright (c) Microsoft Corporation.
+     Licensed under MIT OR Apache-2.0.
+   - serde_json (https://github.com/serde-rs/json)
+     Licensed under MIT OR Apache-2.0.

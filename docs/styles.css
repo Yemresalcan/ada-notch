@@ -268,6 +268,44 @@ h1 em::after {
 .hero .meta.reveal { animation-delay: 0.66s; }
 @keyframes rise { to { opacity: 1; transform: none; } }
 
+/* Promo video under the hero CTA: plays muted on load, sound on demand. */
+.hero-video {
+  position: relative;
+  width: min(1040px, 100%);
+  margin: 48px auto 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #000;
+  box-shadow: 0 30px 80px -30px rgba(227, 10, 23, 0.45), 0 12px 40px rgba(0, 0, 0, 0.5);
+  aspect-ratio: 16 / 9;
+}
+.hero-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hero .hero-video.reveal { animation-delay: 0.8s; }
+.sound-btn {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px 9px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(10, 10, 12, 0.72);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font: 600 13.5px/1 var(--body);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.sound-btn:hover { background: rgba(227, 10, 23, 0.85); border-color: rgba(255, 90, 90, 0.6); transform: translateY(-1px); }
+.sound-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sound-btn svg path:first-child { fill: currentColor; }
+.sound-btn .wave, .sound-btn .lbl-off { display: none; }
+.sound-btn[aria-pressed="true"] .wave, .sound-btn[aria-pressed="true"] .lbl-off { display: inline; }
+.sound-btn[aria-pressed="true"] .x, .sound-btn[aria-pressed="true"] .lbl-on { display: none; }
+
 /* ---- stats ---- */
 .stats {
   display: grid;
@@ -494,6 +532,7 @@ section { padding: 0 clamp(16px, 4vw, 40px); }
 }
 @media (max-width: 600px) {
   body { font-size: 16px; }
+  .hero-video { margin-top: 32px; border-radius: 14px; }
   .grid, .dl-grid { grid-template-columns: 1fr; }
   .card-wide { grid-column: auto; grid-row: auto; }
   .nav .btn-small { display: none; }

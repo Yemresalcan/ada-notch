@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=JetBrains+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="notch.css?v=7">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="notch.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -61,6 +61,15 @@
         </a>
       </div>
       <p class="meta reveal" data-i18n="hero.meta">v0.1.1 · ~700 KB · Kurulum yönetici izni istemez</p>
+      <div class="hero-video reveal">
+        <video id="promo" src="assets/ada-promo.mp4" poster="assets/ada-promo-poster.jpg"
+          muted autoplay loop playsinline preload="auto" aria-label="Ada promo video"></video>
+        <button class="sound-btn" id="promo-sound" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg>
+          <span class="lbl-on" data-i18n="hero.sound_on">Sesi aç</span>
+          <span class="lbl-off" data-i18n="hero.sound_off">Sesi kapat</span>
+        </button>
+      </div>
     </section>
 
     <section class="stats" aria-label="Ada in numbers">
@@ -217,9 +226,9 @@ cargo run --release</code></pre>
     <span><a href="https://github.com/Yemresalcan/ada-notch/blob/main/LICENSE" data-i18n="footer.license">Apache-2.0 lisanslı</a></span>
   </footer>
 
-  <script src="notch.js?v=7" defer></script>
-  <script src="js/i18n.js?v=7" defer></script>
-  <script src="js/release.js?v=7" defer></script>
-  <script src="main.js?v=7" defer></script>
+  <script src="notch.js?v=8" defer></script>
+  <script src="js/i18n.js?v=8" defer></script>
+  <script src="js/release.js?v=8" defer></script>
+  <script src="main.js?v=8" defer></script>
 </body>
 </html>

@@ -67,4 +67,24 @@
       hero.style.setProperty("--tilt", "0deg");
     });
   }
+
+  const promo = document.getElementById("promo");
+  const soundBtn = document.getElementById("promo-sound");
+  if (promo && soundBtn) {
+    // Respect reduced motion: no autoplay, show the poster with native controls instead.
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      promo.removeAttribute("autoplay");
+      promo.pause();
+      promo.controls = true;
+    }
+    soundBtn.addEventListener("click", () => {
+      const turnOn = promo.muted;
+      promo.muted = !turnOn;
+      if (turnOn) {
+        promo.currentTime = 0; // hear the voiceover from the start
+        promo.play().catch(() => {});
+      }
+      soundBtn.setAttribute("aria-pressed", String(turnOn));
+    });
+  }
 })();

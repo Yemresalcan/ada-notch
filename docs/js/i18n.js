@@ -23,6 +23,8 @@
       "hero.cta2": "GitHub'da yıldız ver",
       "hero.meta": "v{version} · ~700 KB · Kurulum yönetici izni istemez",
       "hero.hint": "Üstteki çentiğin üzerine gel",
+      "hero.sound_on": "Sesi aç",
+      "hero.sound_off": "Sesi kapat",
 
       "feat.title": "Küçük bir çentik, bir sürü iş.",
       "feat.sub": "Her sayfa ayrı bir özellik; istemediğini Ayarlar'dan tek tıkla kapat.",
@@ -101,6 +103,8 @@
       "hero.cta2": "Star on GitHub",
       "hero.meta": "v{version} · ~700 KB · No admin rights required",
       "hero.hint": "Hover the notch above",
+      "hero.sound_on": "Sound on",
+      "hero.sound_off": "Sound off",
 
       "feat.title": "A tiny notch that does a lot.",
       "feat.sub": "Every page is an independent feature — turn off anything you don't need in Settings.",

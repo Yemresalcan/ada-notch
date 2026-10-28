@@ -20,7 +20,7 @@
       "hero.title_html": "Ekranının tepesinde<br>küçük bir <em>ada</em>.",
       "hero.sub": "Müzik ve senkronize şarkı sözleri, odak zamanlayıcısı, hava durumu, dosya rafı ve bildirimler — hepsi ekranının tepesindeki zarif siyah kapsülde. Rust ile yazılmış minik ve yerleşik bir Windows uygulamasıdır; boştayken işlemciyi hiç yormaz.",
       "hero.cta": "Windows için indir",
-      "hero.cta2": "GitHub'da incele",
+      "hero.cta2": "GitHub'da starla",
       "hero.meta": "v{version} · ~700 KB · Kurulum yönetici izni istemez",
       "hero.hint": "Üstteki çentiğin üzerine gel",
 
@@ -98,7 +98,7 @@
       "hero.title_html": "A little <em>island</em><br>at the top of your screen.",
       "hero.sub": "Music and synced lyrics, a focus timer, weather, a file shelf, and notifications — all tucked into a sleek black pill at the top of your screen. Built natively in Rust as a tiny ~700 KB app that idles at 0 FPS.",
       "hero.cta": "Download for Windows",
-      "hero.cta2": "View on GitHub",
+      "hero.cta2": "Star on GitHub",
       "hero.meta": "v{version} · ~700 KB · No admin rights required",
       "hero.hint": "Hover the notch above",
 

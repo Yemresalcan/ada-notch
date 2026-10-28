@@ -2,7 +2,7 @@
 
 A lightweight, native "Dynamic Island"-style notch for Windows 10 and 11 — written in Rust.
 
-[Türkçe](#türkçe)
+**Website:** https://yemresalcan.github.io/ada-notch/ · [Türkçe](#türkçe)
 
 ![Ada](docs/screenshot.png)
 

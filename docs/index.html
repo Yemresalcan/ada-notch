@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=JetBrains+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="notch.css?v=3">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="notch.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -84,38 +84,52 @@
           <p data-i18n="feat.media.d">Herhangi bir uygulamada çalan şarkı, kontroller ve senkron sözler.</p>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4zM8 7V5h8v2M12 10v6M9 13l3 3 3-3"/></svg></div>
-          <h3 data-i18n="feat.shelf.t">Dosya rafı</h3>
+          <div class="card-head">
+            <img class="card-icon" src="assets/icons/shelf.png" alt="" width="44" height="44" loading="lazy">
+            <h3 data-i18n="feat.shelf.t">Dosya rafı</h3>
+          </div>
           <p data-i18n="feat.shelf.d">Dosya ve linkleri çentiğe bırak, sonra geri sürükle.</p>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></div>
-          <h3 data-i18n="feat.focus.t">Odak zamanlayıcısı</h3>
+          <div class="card-head">
+            <img class="card-icon" src="assets/icons/focus.png" alt="" width="44" height="44" loading="lazy">
+            <h3 data-i18n="feat.focus.t">Odak zamanlayıcısı</h3>
+          </div>
           <p data-i18n="feat.focus.d">Pomodoro 25/5/15, çentikte canlı geri sayım.</p>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4 1.6A3.3 3.3 0 0 0 7 18Z"/></svg></div>
-          <h3 data-i18n="feat.weather.t">Hava durumu</h3>
+          <div class="card-head">
+            <img class="card-icon" src="assets/icons/weather.png" alt="" width="44" height="44" loading="lazy">
+            <h3 data-i18n="feat.weather.t">Hava durumu</h3>
+          </div>
           <p data-i18n="feat.weather.d">Bulunduğun yer için anlık durum ve saatlik tahmin.</p>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></div>
-          <h3 data-i18n="feat.system.t">Sistem</h3>
+          <div class="card-head">
+            <img class="card-icon" src="assets/icons/system.png" alt="" width="44" height="44" loading="lazy">
+            <h3 data-i18n="feat.system.t">Sistem</h3>
+          </div>
           <p data-i18n="feat.system.d">CPU ve RAM halkaları, canlı grafik.</p>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/></svg></div>
-          <h3 data-i18n="feat.notify.t">Bildirimler</h3>
+          <div class="card-head">
+            <img class="card-icon" src="assets/icons/notify.png" alt="" width="44" height="44" loading="lazy">
+            <h3 data-i18n="feat.notify.t">Bildirimler</h3>
+          </div>
           <p data-i18n="feat.notify.d">Windows bildirimleri kısa bir “peek” olarak.</p>
         </article>
         <article class="card">
-          <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 7h3M5 12h3M5 17h3M11 7h8M11 12h8M11 17h8"/></svg></div>
-          <h3 data-i18n="feat.todo.t">Yapılacaklar ve takvim</h3>
+          <div class="card-head">
+            <img class="card-icon" src="assets/icons/todo.png" alt="" width="44" height="44" loading="lazy">
+            <h3 data-i18n="feat.todo.t">Yapılacaklar ve takvim</h3>
+          </div>
           <p data-i18n="feat.todo.d">Hızlı liste ve sade, yerel bir takvim.</p>
         </article>
         <article class="card card-span2">
-          <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></div>
-          <h3 data-i18n="feat.settings.t">Senin kuralların</h3>
+          <div class="card-head">
+            <img class="card-icon" src="assets/icons/settings.png" alt="" width="44" height="44" loading="lazy">
+            <h3 data-i18n="feat.settings.t">Senin kuralların</h3>
+          </div>
           <p data-i18n="feat.settings.d">Her sayfayı aç/kapat, istersen minimal mod.</p>
         </article>
       </div>
@@ -201,9 +215,9 @@ cargo run --release</code></pre>
     <span><a href="https://github.com/Yemresalcan/ada-notch/blob/main/LICENSE" data-i18n="footer.license">Apache-2.0 lisanslı</a></span>
   </footer>
 
-  <script src="notch.js?v=3" defer></script>
-  <script src="js/i18n.js?v=3" defer></script>
-  <script src="js/release.js?v=3" defer></script>
-  <script src="main.js?v=3" defer></script>
+  <script src="notch.js?v=4" defer></script>
+  <script src="js/i18n.js?v=4" defer></script>
+  <script src="js/release.js?v=4" defer></script>
+  <script src="main.js?v=4" defer></script>
 </body>
 </html>

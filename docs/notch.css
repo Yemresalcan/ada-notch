@@ -71,9 +71,11 @@
 
 /* ---- peek ---- */
 .ada-peek { display: flex; align-items: center; gap: 12px; padding: 6px 18px 0 16px; }
-.ada-bubble { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 50%; background: rgba(255, 59, 59, 0.2); font-size: 18px; }
+.ada-bubble { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 50%; background: rgba(255, 59, 59, 0.2); overflow: visible; }
+.ada-bubble img { width: 26px; height: 26px; display: block; transform-origin: 70% 80%; animation: ada-peek-wave 1.6s ease-in-out 2; }
+@keyframes ada-peek-wave { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-16deg); } 40% { transform: rotate(12deg); } 60% { transform: rotate(-10deg); } 80% { transform: rotate(6deg); } }
 .ada-peek b { display: block; font-size: 13.5px; }
-.ada-peek span { display: block; font-size: 12px; color: rgba(255, 255, 255, 0.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ada-peek b + span { display: block; font-size: 12px; color: rgba(255, 255, 255, 0.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ---- expanded panel ---- */
 .ada-panel { font-size: 12px; }

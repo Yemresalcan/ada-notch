@@ -53,7 +53,7 @@
         <span class="ada-bars"><i></i><i></i><i></i><i></i></span>
       </div>
       <div class="ada-layer ada-peek">
-        <span class="ada-bubble">👋</span>
+        <div class="ada-bubble"><img src="assets/hand.png" alt=""></div>
         <div><b data-k="peekTitle">${s.peekTitle}</b><span data-k="peekBody">${s.peekBody}</span></div>
       </div>
       <div class="ada-layer ada-panel">

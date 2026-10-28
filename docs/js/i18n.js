@@ -20,7 +20,7 @@
       "hero.title_html": "Ekranının tepesinde<br>küçük bir <em>ada</em>.",
       "hero.sub": "Müzik ve senkronize şarkı sözleri, odak zamanlayıcısı, hava durumu, dosya rafı ve bildirimler — hepsi ekranının tepesindeki zarif siyah kapsülde. Rust ile yazılmış minik ve yerleşik bir Windows uygulamasıdır; boştayken işlemciyi hiç yormaz.",
       "hero.cta": "Windows için indir",
-      "hero.cta2": "GitHub'da starla",
+      "hero.cta2": "GitHub'da yıldız ver",
       "hero.meta": "v{version} · ~700 KB · Kurulum yönetici izni istemez",
       "hero.hint": "Üstteki çentiğin üzerine gel",
 

@@ -81,7 +81,6 @@
       "dl.req": "Windows 10 1903+ veya 11 · x64",
       "dl.all": "Tüm sürümler",
 
-      "footer.made_html": "Türkiye'de <em>♥</em> ile yapıldı",
       "footer.license": "Apache-2.0 lisanslı",
     },
 
@@ -160,7 +159,6 @@
       "dl.req": "Windows 10 1903+ or 11 · x64",
       "dl.all": "All releases",
 
-      "footer.made_html": "Made with <em>♥</em> in Türkiye",
       "footer.license": "Apache-2.0 licensed",
     },
   };

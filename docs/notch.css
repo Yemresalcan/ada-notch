@@ -10,7 +10,7 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
-  font-family: "Segoe UI Variable Text", "Segoe UI", "Onest", sans-serif;
+  font-family: "Segoe UI Variable Text", "Segoe UI", "Plus Jakarta Sans", sans-serif;
   color: #fff;
   user-select: none;
 }

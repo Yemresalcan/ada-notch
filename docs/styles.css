@@ -10,8 +10,8 @@
   --red-hot: #ff3b3b;
   --ember: #ff6a3d;
   --radius: 22px;
-  --display: "Bricolage Grotesque", "Segoe UI", sans-serif;
-  --body: "Onest", "Segoe UI", sans-serif;
+  --display: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --body: "Plus Jakarta Sans", "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
@@ -187,7 +187,7 @@ body.notch-touched .hint { opacity: 0; }
   letter-spacing: 0.14em;
   color: var(--muted);
 }
-h1, h2 { font-family: var(--display); letter-spacing: -0.045em; line-height: 0.94; margin: 0; }
+h1, h2 { font-family: var(--display); letter-spacing: -0.035em; line-height: 1.0; margin: 0; }
 h1 { font-size: clamp(3rem, 8.4vw, 7.6rem); font-weight: 800; }
 h1 em, h2 em {
   font-style: normal;
@@ -428,7 +428,6 @@ section { padding: 0 clamp(16px, 4vw, 40px); }
   color: var(--faint);
 }
 .footer .brand { font-size: 16px; color: var(--ink); }
-.footer em { font-style: normal; color: var(--red-hot); }
 .footer a { color: var(--muted); }
 
 /* ---- scroll reveal (main.js adds .in) ---- */

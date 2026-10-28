@@ -158,16 +158,41 @@ img { display: block; }
 .hero-beam {
   position: absolute;
   top: 0;
-  left: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   width: min(760px, 90vw);
   height: 70vh;
-  transform: translateX(-50%);
+  rotate: var(--tilt, 0deg);
+  transform-origin: 50% 0;
+  transition: rotate 0.25s linear;
   background: conic-gradient(from 180deg at 50% 0%, transparent 155deg, rgba(255, 59, 59, 0.16) 175deg, rgba(255, 106, 61, 0.22) 180deg, rgba(255, 59, 59, 0.16) 185deg, transparent 205deg);
   filter: blur(18px);
   pointer-events: none;
   animation: beam 7s ease-in-out infinite;
 }
-@keyframes beam { 50% { opacity: 0.55; transform: translateX(-50%) scaleX(1.15); } }
+@keyframes beam { 50% { opacity: 0.55; transform: scaleX(1.15); } }
+/* Light that follows the cursor (main.js sets --hx/--hy/--hon/--tilt on .hero). */
+.hero-spot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: var(--hon, 0);
+  transition: opacity 0.6s ease;
+  background: radial-gradient(520px circle at var(--hx, 50%) var(--hy, 30%), rgba(255, 40, 40, 0.30), rgba(227, 10, 23, 0.10) 40%, transparent 70%);
+}
+.hero-spot::after {
+  /* the grid, brighter, visible only around the cursor */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 90, 90, 0.32) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 90, 90, 0.32) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center -1px;
+  -webkit-mask-image: radial-gradient(260px circle at var(--hx, 50%) var(--hy, 30%), #000, transparent 75%);
+  mask-image: radial-gradient(260px circle at var(--hx, 50%) var(--hy, 30%), #000, transparent 75%);
+}
 .hint {
   position: absolute;
   top: 74px;
@@ -452,4 +477,5 @@ section { padding: 0 clamp(16px, 4vw, 40px); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .hero-spot { display: none; }
 }

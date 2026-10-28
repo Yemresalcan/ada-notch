@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const STORAGE_KEY = "ada-lang";
+  const STORAGE_KEY = "ada-lang-v2"; // v2: English became the default for everyone
   const DEFAULT_VERSION = "0.1.1";
 
   const STRINGS = {
@@ -191,9 +191,8 @@
 
   const detectLang = () => {
     const saved = readSavedLang();
-    if (saved) return saved;
-    const nav = (navigator.language || "").toLowerCase();
-    return nav.startsWith("tr") ? "tr" : "en";
+    // English unless the visitor picked Turkish with the toggle.
+    return saved || "en";
   };
 
   const escapeHtml = (s) =>

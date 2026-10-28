@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ada — Windows için Dynamic Island</title>
-  <meta name="description" content="Ada, Windows 10 ve 11 için ücretsiz, açık kaynak Dynamic Island tarzı bir çentik: müzik, şarkı sözleri, odak zamanlayıcısı, hava durumu ve dosya rafı.">
+  <title>Ada — Dynamic Island for Windows</title>
+  <meta name="description" content="Ada is a free, open-source Dynamic Island-style notch for Windows 10 and 11, written natively in Rust with media controls, synced lyrics, a focus timer, weather, and a file shelf.">
   <meta name="theme-color" content="#070505">
   <meta property="og:title" content="Ada — Dynamic Island for Windows">
   <meta property="og:description" content="A free, open-source Dynamic Island-style notch for Windows 10 & 11.">
@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=JetBrains+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="notch.css?v=8">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="notch.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -30,14 +30,14 @@
       <span>Ada</span>
     </a>
     <nav class="nav-links">
-      <a href="#features" data-i18n="nav.features">Özellikler</a>
-      <a href="#mascot" data-i18n="nav.mascot">Maskot</a>
-      <a href="#opensource" data-i18n="nav.opensource">Açık kaynak</a>
-      <a href="#faq" data-i18n="nav.faq">SSS</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#mascot" data-i18n="nav.mascot">Mascot</a>
+      <a href="#opensource" data-i18n="nav.opensource">Open source</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
     </nav>
     <div class="nav-actions">
       <button class="lang" id="lang-toggle" type="button" aria-label="Language">EN</button>
-      <a class="btn btn-small" data-download="setup" href="https://github.com/Yemresalcan/ada-notch/releases/latest" data-i18n="nav.download">İndir</a>
+      <a class="btn btn-small" data-download="setup" href="https://github.com/Yemresalcan/ada-notch/releases/latest" data-i18n="nav.download">Download</a>
     </div>
   </header>
 
@@ -45,112 +45,112 @@
     <section class="hero">
       <div class="hero-beam" aria-hidden="true"></div>
       <div class="hero-spot" aria-hidden="true"></div>
-      <p class="hint"><span class="hint-arrow">↑</span> <span data-i18n="hero.hint">Üstteki çentiğin üzerine gel</span></p>
-      <p class="eyebrow reveal" data-i18n="hero.eyebrow">Windows 10 &amp; 11 için · Ücretsiz ve açık kaynak</p>
-      <h1 class="reveal" data-i18n-html="hero.title_html">Ekranının tepesinde<br>küçük bir <em>ada</em>.</h1>
-      <p class="lede reveal" data-i18n="hero.sub">Müzik ve şarkı sözleri, odak zamanlayıcısı, hava durumu, dosya rafı ve bildirimler — hepsi ekranın tepesindeki küçük, siyah bir çentikte.</p>
+      <p class="hint"><span class="hint-arrow">↑</span> <span data-i18n="hero.hint">Hover the notch above</span></p>
+      <p class="eyebrow reveal" data-i18n="hero.eyebrow">For Windows 10 &amp; 11 · Free &amp; open source</p>
+      <h1 class="reveal" data-i18n-html="hero.title_html">A little <em>island</em><br>at the top of your screen.</h1>
+      <p class="lede reveal" data-i18n="hero.sub">Music and synced lyrics, a focus timer, weather, a file shelf, and notifications — all tucked into a sleek black pill at the top of your screen. Built natively in Rust as a tiny ~700 KB app that idles at 0 FPS.</p>
       <div class="cta reveal">
         <a class="btn btn-primary" id="hero-download" data-download="setup" href="https://github.com/Yemresalcan/ada-notch/releases/latest">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5 10.5 4.5v7H3zM11.5 4.4 21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zM11.5 12.5H21V21l-9.5-1.4z"/></svg>
-          <span data-i18n="hero.cta">Windows için indir</span>
+          <span data-i18n="hero.cta">Download for Windows</span>
         </a>
         <a class="btn btn-ghost btn-star" href="https://github.com/Yemresalcan/ada-notch">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2.2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.2-1.3-5.2-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.2 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5Z"/></svg>
-          <span data-i18n="hero.cta2">GitHub'da yıldız ver</span>
+          <span data-i18n="hero.cta2">Star on GitHub</span>
           <span class="star-pill" aria-hidden="true"><span class="star-icon">★</span><b class="star-count" data-stars></b></span>
         </a>
       </div>
-      <p class="meta reveal" data-i18n="hero.meta">v0.1.1 · ~700 KB · Kurulum yönetici izni istemez</p>
+      <p class="meta reveal" data-i18n="hero.meta">v0.1.1 · ~700 KB · No admin rights required</p>
       <div class="hero-video reveal">
         <video id="promo" src="assets/ada-promo.mp4" poster="assets/ada-promo-poster.jpg"
           muted autoplay loop playsinline preload="auto" aria-label="Ada promo video"></video>
         <button class="sound-btn" id="promo-sound" type="button" aria-pressed="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg>
-          <span class="lbl-on" data-i18n="hero.sound_on">Sesi aç</span>
-          <span class="lbl-off" data-i18n="hero.sound_off">Sesi kapat</span>
+          <span class="lbl-on" data-i18n="hero.sound_on">Sound on</span>
+          <span class="lbl-off" data-i18n="hero.sound_off">Sound off</span>
         </button>
       </div>
     </section>
 
     <section class="stats" aria-label="Ada in numbers">
-      <div class="stat"><b data-i18n="stat.size.v">~700 KB</b><span data-i18n="stat.size.l">tek exe, bağımlılık yok</span></div>
-      <div class="stat"><b data-i18n="stat.cpu.v">0 FPS</b><span data-i18n="stat.cpu.l">boştayken</span></div>
+      <div class="stat"><b data-i18n="stat.size.v">~700 KB</b><span data-i18n="stat.size.l">single exe, no dependencies</span></div>
+      <div class="stat"><b data-i18n="stat.cpu.v">0 FPS</b><span data-i18n="stat.cpu.l">when idle</span></div>
       <div class="stat"><b data-i18n="stat.native.v">Rust</b><span data-i18n="stat.native.l">Direct2D + DirectComposition</span></div>
-      <div class="stat"><b data-i18n="stat.pages.v">10</b><span data-i18n="stat.pages.l">sayfa, hepsi isteğe bağlı</span></div>
+      <div class="stat"><b data-i18n="stat.pages.v">10</b><span data-i18n="stat.pages.l">pages, all optional</span></div>
     </section>
 
     <section class="features" id="features">
       <header class="section-head">
-        <h2 data-i18n="feat.title">Küçük bir çentik, bir sürü iş.</h2>
-        <p data-i18n="feat.sub">Her sayfa ayrı bir özellik; istemediğini Ayarlar'dan kapat.</p>
+        <h2 data-i18n="feat.title">A tiny notch that does a lot.</h2>
+        <p data-i18n="feat.sub">Every page is an independent feature — turn off anything you don't need in Settings.</p>
       </header>
       <div class="grid">
         <article class="card card-wide">
           <div class="card-art art-media" aria-hidden="true">
             <div class="cover"></div>
             <div class="track"><i></i><i></i><i></i><i></i><i></i></div>
-            <div class="lyric"><span>♪ Boğaz'da akşam olur…</span></div>
+            <div class="lyric"><span>♪ Lights come on across the water…</span></div>
           </div>
-          <h3 data-i18n="feat.media.t">Müzik ve şarkı sözleri</h3>
-          <p data-i18n="feat.media.d">Herhangi bir uygulamada çalan şarkı, kontroller ve senkron sözler.</p>
+          <h3 data-i18n="feat.media.t">Media &amp; lyrics</h3>
+          <p data-i18n="feat.media.d">See what's playing from any app with playback controls, synced lyrics, and album art plus animated bars in the collapsed notch.</p>
         </article>
         <article class="card">
           <div class="card-head">
             <img class="card-icon" src="assets/icons/shelf.png" alt="" width="44" height="44" loading="lazy">
-            <h3 data-i18n="feat.shelf.t">Dosya rafı</h3>
+            <h3 data-i18n="feat.shelf.t">File shelf</h3>
           </div>
-          <p data-i18n="feat.shelf.d">Dosya ve linkleri çentiğe bırak, sonra geri sürükle.</p>
+          <p data-i18n="feat.shelf.d">Drag files and links onto the notch to stash them temporarily, then drag them right back out later.</p>
         </article>
         <article class="card">
           <div class="card-head">
             <img class="card-icon" src="assets/icons/focus.png" alt="" width="44" height="44" loading="lazy">
-            <h3 data-i18n="feat.focus.t">Odak zamanlayıcısı</h3>
+            <h3 data-i18n="feat.focus.t">Focus timer</h3>
           </div>
-          <p data-i18n="feat.focus.d">Pomodoro 25/5/15, çentikte canlı geri sayım.</p>
+          <p data-i18n="feat.focus.d">Run 25/5/15-minute Pomodoro sessions with a live countdown right inside the notch.</p>
         </article>
         <article class="card">
           <div class="card-head">
             <img class="card-icon" src="assets/icons/weather.png" alt="" width="44" height="44" loading="lazy">
-            <h3 data-i18n="feat.weather.t">Hava durumu</h3>
+            <h3 data-i18n="feat.weather.t">Weather</h3>
           </div>
-          <p data-i18n="feat.weather.d">Bulunduğun yer için anlık durum ve saatlik tahmin.</p>
+          <p data-i18n="feat.weather.d">Get local weather conditions and an hourly forecast automatically by IP location.</p>
         </article>
         <article class="card">
           <div class="card-head">
             <img class="card-icon" src="assets/icons/system.png" alt="" width="44" height="44" loading="lazy">
-            <h3 data-i18n="feat.system.t">Sistem</h3>
+            <h3 data-i18n="feat.system.t">System</h3>
           </div>
-          <p data-i18n="feat.system.d">CPU ve RAM halkaları, canlı grafik.</p>
+          <p data-i18n="feat.system.d">Keep an eye on CPU and RAM rings paired with a live usage graph.</p>
         </article>
         <article class="card">
           <div class="card-head">
             <img class="card-icon" src="assets/icons/notify.png" alt="" width="44" height="44" loading="lazy">
-            <h3 data-i18n="feat.notify.t">Bildirimler</h3>
+            <h3 data-i18n="feat.notify.t">Notifications</h3>
           </div>
-          <p data-i18n="feat.notify.d">Windows bildirimleri kısa bir “peek” olarak.</p>
+          <p data-i18n="feat.notify.d">Catch incoming Windows notifications as brief, unobtrusive animated peeks.</p>
         </article>
         <article class="card">
           <div class="card-head">
             <img class="card-icon" src="assets/icons/todo.png" alt="" width="44" height="44" loading="lazy">
-            <h3 data-i18n="feat.todo.t">Yapılacaklar ve takvim</h3>
+            <h3 data-i18n="feat.todo.t">Todo &amp; calendar</h3>
           </div>
-          <p data-i18n="feat.todo.d">Hızlı liste ve sade, yerel bir takvim.</p>
+          <p data-i18n="feat.todo.d">Keep a quick todo list and a simple local calendar right at the top of your screen.</p>
         </article>
         <article class="card card-span2">
           <div class="card-head">
             <img class="card-icon" src="assets/icons/settings.png" alt="" width="44" height="44" loading="lazy">
-            <h3 data-i18n="feat.settings.t">Senin kuralların</h3>
+            <h3 data-i18n="feat.settings.t">Your rules</h3>
           </div>
-          <p data-i18n="feat.settings.d">Her sayfayı aç/kapat, istersen minimal mod.</p>
+          <p data-i18n="feat.settings.d">Turn every individual page on or off, or switch to minimal mode for a slimmer idle strip.</p>
         </article>
       </div>
     </section>
 
     <section class="mascot" id="mascot">
       <div class="mascot-copy">
-        <h2 data-i18n-html="mascot.title_html">Boşta kalınca<br><em>Merhaba</em> der.</h2>
-        <p data-i18n="mascot.sub">15 saniye dokunmazsan elle “Merhaba” yazar, gözlerini açar, uyur ve el sallar. Döndüğünde uyanır.</p>
-        <p class="try" data-i18n="mascot.try">Sayfada 5 saniye hiçbir şeye dokunma</p>
+        <h2 data-i18n-html="mascot.title_html">Says <em>Merhaba</em><br>when you step away.</h2>
+        <p data-i18n="mascot.sub">After 15 seconds idle it writes “Merhaba” by hand, opens its eyes, falls asleep and waves — then wakes right up when you return.</p>
+        <p class="try" data-i18n="mascot.try">Don't touch anything for 5 seconds</p>
       </div>
       <div class="mascot-stage" aria-hidden="true">
         <div class="stage-screen">
@@ -162,13 +162,13 @@
     <section class="opensource" id="opensource">
       <div class="os-card">
         <div>
-          <h2 data-i18n="os.title">Açık kaynak, sonuna kadar.</h2>
-          <p data-i18n="os.sub">Apache-2.0 lisanslı. Her sürüm herkese açık kaynaktan GitHub Actions ile derlenir; katkılar çok değerli.</p>
+          <h2 data-i18n="os.title">Open source, through and through.</h2>
+          <p data-i18n="os.sub">Licensed under Apache-2.0 and built directly from public source by GitHub Actions — contributions, bug reports, and ideas are always welcome.</p>
           <div class="cta">
             <a class="btn btn-ghost" href="https://github.com/Yemresalcan/ada-notch">
-              <span aria-hidden="true">★</span> <span data-i18n="os.star">GitHub'da yıldız ver</span> <b class="stars" data-stars></b>
+              <span aria-hidden="true">★</span> <span data-i18n="os.star">Star on GitHub</span> <b class="stars" data-stars></b>
             </a>
-            <a class="btn btn-ghost" href="https://github.com/Yemresalcan/ada-notch/blob/main/CONTRIBUTING.md" data-i18n="os.contribute">Katkıda bulun</a>
+            <a class="btn btn-ghost" href="https://github.com/Yemresalcan/ada-notch/blob/main/CONTRIBUTING.md" data-i18n="os.contribute">Contribute</a>
           </div>
         </div>
         <pre class="code" aria-label="Build from source"><code><span class="c"># build from source</span>
@@ -179,56 +179,56 @@ cargo run --release</code></pre>
     </section>
 
     <section class="faq" id="faq">
-      <h2 data-i18n="faq.title">Sık sorulanlar</h2>
+      <h2 data-i18n="faq.title">Frequently asked questions</h2>
       <details>
-        <summary data-i18n="faq.q1">İndirirken neden uyarı çıkıyor?</summary>
-        <p data-i18n="faq.a1">Ada yeni ve henüz kod imzalı değil; tarayıcılar ve SmartScreen az indirilen dosyalar için itibar uyarısı gösterir. Bu bir virüs tespiti değildir.</p>
+        <summary data-i18n="faq.q1">Why does my browser or Windows SmartScreen show a warning?</summary>
+        <p data-i18n="faq.a1">Ada is new and not yet code-signed, so browsers and SmartScreen show a standard reputation warning — not a virus detection. Verify the download with SHA-256 against SHA256SUMS.txt, then choose “More info → Run anyway”.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q2">Verilerim nereye gidiyor?</summary>
-        <p data-i18n="faq.a2">Her şey bilgisayarında, %APPDATA%\Ada içinde kalır. Telemetri yok.</p>
+        <summary data-i18n="faq.q2">Where does my data go?</summary>
+        <p data-i18n="faq.a2">Everything stays local in %APPDATA%\Ada with zero telemetry. Only weather (MET Norway, location by IP) and synced lyrics (LRCLIB) are fetched when enabled.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q3">Nasıl kaldırırım?</summary>
-        <p data-i18n="faq.a3">Ayarlar › Uygulamalar › Ada › Kaldır.</p>
+        <summary data-i18n="faq.q3">How do I uninstall Ada?</summary>
+        <p data-i18n="faq.a3">Uninstall anytime from Settings › Apps, with an optional prompt to remove your local data. For the portable ada.exe, simply delete the file.</p>
       </details>
       <details>
-        <summary data-i18n="faq.q4">Mac veya Linux sürümü var mı?</summary>
-        <p data-i18n="faq.a4">Hayır, Ada yalnızca Windows içindir.</p>
+        <summary data-i18n="faq.q4">Is there a macOS or Linux version?</summary>
+        <p data-i18n="faq.a4">Windows only — the notch idea comes from Mac, and Ada brings it natively to Windows 10 and 11.</p>
       </details>
     </section>
 
     <section class="download" id="download">
-      <h2 data-i18n="dl.title">Ada'yı indir</h2>
-      <p class="lede" data-i18n="dl.sub">Ücretsiz. Kurulum bir dakika sürmez.</p>
+      <h2 data-i18n="dl.title">Download Ada</h2>
+      <p class="lede" data-i18n="dl.sub">Free and open source — setup takes under a minute.</p>
       <div class="dl-grid">
         <a class="dl-card dl-primary" id="dl-setup" href="https://github.com/Yemresalcan/ada-notch/releases/latest">
-          <span class="dl-kicker" data-i18n="dl.setup">Kurulum dosyası</span>
+          <span class="dl-kicker" data-i18n="dl.setup">Installer</span>
           <b>Ada-Setup-<span data-version>0.1.1</span>.exe</b>
-          <span class="dl-note"><span data-i18n="dl.setup_note">Önerilen · Başlat menüsü ve otomatik başlatma</span> · <span data-size="setup">2.4 MB</span></span>
+          <span class="dl-note"><span data-i18n="dl.setup_note">Recommended · Start menu &amp; autostart</span> · <span data-size="setup">2.4 MB</span></span>
         </a>
         <a class="dl-card" id="dl-portable" href="https://github.com/Yemresalcan/ada-notch/releases/latest">
-          <span class="dl-kicker" data-i18n="dl.portable">Taşınabilir</span>
+          <span class="dl-kicker" data-i18n="dl.portable">Portable</span>
           <b>ada.exe</b>
-          <span class="dl-note"><span data-i18n="dl.portable_note">Kurulumsuz tek .exe</span> · <span data-size="portable">605 KB</span></span>
+          <span class="dl-note"><span data-i18n="dl.portable_note">Single .exe, no install</span> · <span data-size="portable">605 KB</span></span>
         </a>
       </div>
       <p class="dl-foot">
-        <span data-i18n="dl.req">Windows 10 1903+ veya 11 · x64</span> ·
-        <a id="dl-sha" href="https://github.com/Yemresalcan/ada-notch/releases/latest" data-i18n="dl.sha">SHA-256 değerleri</a> ·
-        <a href="https://github.com/Yemresalcan/ada-notch/releases" data-i18n="dl.all">Tüm sürümler</a>
+        <span data-i18n="dl.req">Windows 10 1903+ or 11 · x64</span> ·
+        <a id="dl-sha" href="https://github.com/Yemresalcan/ada-notch/releases/latest" data-i18n="dl.sha">SHA-256 checksums</a> ·
+        <a href="https://github.com/Yemresalcan/ada-notch/releases" data-i18n="dl.all">All releases</a>
       </p>
     </section>
   </main>
 
   <footer class="footer">
     <span class="brand"><img src="assets/icon.png" alt="" width="22" height="22"> Ada</span>
-    <span><a href="https://github.com/Yemresalcan/ada-notch/blob/main/LICENSE" data-i18n="footer.license">Apache-2.0 lisanslı</a></span>
+    <span><a href="https://github.com/Yemresalcan/ada-notch/blob/main/LICENSE" data-i18n="footer.license">Apache-2.0 licensed</a></span>
   </footer>
 
-  <script src="notch.js?v=8" defer></script>
-  <script src="js/i18n.js?v=8" defer></script>
-  <script src="js/release.js?v=8" defer></script>
-  <script src="main.js?v=8" defer></script>
+  <script src="notch.js?v=9" defer></script>
+  <script src="js/i18n.js?v=9" defer></script>
+  <script src="js/release.js?v=9" defer></script>
+  <script src="main.js?v=9" defer></script>
 </body>
 </html>

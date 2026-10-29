@@ -4,19 +4,141 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ada — Dynamic Island for Windows</title>
-  <meta name="description" content="Ada is a free, open-source Dynamic Island-style notch for Windows 10 and 11, written natively in Rust with media controls, synced lyrics, a focus timer, weather, and a file shelf.">
-  <meta name="theme-color" content="#070505">
-  <meta property="og:title" content="Ada — Dynamic Island for Windows">
-  <meta property="og:description" content="A free, open-source Dynamic Island-style notch for Windows 10 & 11.">
-  <meta property="og:image" content="assets/og.png">
+  <meta name="description" content="Ada is a free, open-source Dynamic Island for Windows 10 and 11: a small black notch at the top of the screen with media controls and synced lyrics, a focus timer, weather, CPU/RAM, a file shelf, todos, a calendar and notifications. Native Rust, ~700 KB, 0 FPS when idle.">
+  <meta name="keywords" content="Dynamic Island for Windows, Windows notch, Windows 11 Dynamic Island, Windows 10, notch app, synced lyrics, now playing, focus timer, open source, Rust">
+  <meta name="author" content="Yemresalcan">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://yemresalcan.github.io/ada-notch/">
+
+  <!-- Open Graph -->
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ada">
+  <meta property="og:url" content="https://yemresalcan.github.io/ada-notch/">
+  <meta property="og:title" content="Ada — a Dynamic Island for Windows">
+  <meta property="og:description" content="Free, open-source notch for Windows 10 & 11: now playing with synced lyrics, focus timer, weather, CPU/RAM, file shelf and more. Native Rust, ~700 KB.">
+  <meta property="og:image" content="https://yemresalcan.github.io/ada-notch/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ada app icon with the text: A Dynamic Island for Windows — ~700 KB, Rust, free and open source">
+  <meta property="og:video" content="https://yemresalcan.github.io/ada-notch/assets/ada-promo.mp4">
+  <meta property="og:video:type" content="video/mp4">
+  <meta property="og:video:width" content="1920">
+  <meta property="og:video:height" content="1080">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="tr_TR">
+
+  <!-- X / Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@yesdev_exe">
+  <meta name="twitter:creator" content="@yesdev_exe">
+  <meta name="twitter:title" content="Ada — a Dynamic Island for Windows">
+  <meta name="twitter:description" content="Free, open-source notch for Windows 10 & 11. Native Rust, ~700 KB, 0 FPS when idle.">
+  <meta name="twitter:image" content="https://yemresalcan.github.io/ada-notch/assets/og.png">
+  <meta name="twitter:image:alt" content="Ada — a Dynamic Island for Windows">
+
+  <meta name="theme-color" content="#070505">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="alternate" type="text/plain" title="LLM summary" href="llms.txt">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=JetBrains+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="notch.css?v=9">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="notch.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=10">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://yemresalcan.github.io/ada-notch/#app",
+        "name": "Ada",
+        "alternateName": "Ada notch",
+        "description": "A free, open-source Dynamic Island-style notch for Windows 10 and 11 with media controls and synced lyrics, a focus timer, weather, CPU and RAM monitor, file shelf, todos, a local calendar, notification previews and an idle mascot.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Windows 10, Windows 11",
+        "url": "https://yemresalcan.github.io/ada-notch/",
+        "downloadUrl": "https://github.com/Yemresalcan/ada-notch/releases/latest",
+        "installUrl": "https://github.com/Yemresalcan/ada-notch/releases/latest",
+        "image": "https://yemresalcan.github.io/ada-notch/assets/og.png",
+        "screenshot": "https://yemresalcan.github.io/ada-notch/screenshot.png",
+        "fileSize": "700KB",
+        "license": "https://www.apache.org/licenses/LICENSE-2.0",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Person", "name": "Yemresalcan", "url": "https://github.com/Yemresalcan" },
+        "codeRepository": "https://github.com/Yemresalcan/ada-notch",
+        "programmingLanguage": "Rust",
+        "featureList": [
+          "Now playing from any app with synced lyrics",
+          "Pomodoro focus timer",
+          "Local weather (location by IP, no setup)",
+          "CPU and RAM monitor",
+          "File and link shelf with drag and drop",
+          "Todo list and local calendar",
+          "Windows notification previews",
+          "Idle mascot that says Merhaba",
+          "Every page can be turned off in Settings"
+        ],
+        "video": {
+          "@type": "VideoObject",
+          "name": "Ada — a Dynamic Island for Windows",
+          "description": "23-second demo of Ada: synced lyrics, focus timer, weather, CPU/RAM and the idle mascot.",
+          "contentUrl": "https://yemresalcan.github.io/ada-notch/assets/ada-promo.mp4",
+          "thumbnailUrl": "https://yemresalcan.github.io/ada-notch/assets/ada-promo-poster.jpg",
+          "uploadDate": "2026-10-29",
+          "duration": "PT24S"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://yemresalcan.github.io/ada-notch/#site",
+        "url": "https://yemresalcan.github.io/ada-notch/",
+        "name": "Ada",
+        "inLanguage": ["en", "tr"],
+        "about": { "@id": "https://yemresalcan.github.io/ada-notch/#app" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Why does my browser or Windows SmartScreen show a warning?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ada is new and not yet code-signed, so browsers and SmartScreen show a standard reputation warning — not a virus detection. Verify the download with SHA-256 against SHA256SUMS.txt, then choose “More info → Run anyway”."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where does my data go?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Everything stays local in %APPDATA%\\Ada with zero telemetry. Only weather (MET Norway, location by IP) and synced lyrics (LRCLIB) are fetched when enabled."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I uninstall Ada?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Uninstall anytime from Settings › Apps, with an optional prompt to remove your local data. For the portable ada.exe, simply delete the file."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a macOS or Linux version?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Windows only — the notch idea comes from Mac, and Ada brings it natively to Windows 10 and 11."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -63,7 +185,8 @@
       <p class="meta reveal" data-i18n="hero.meta">v0.1.1 · ~700 KB · No admin rights required</p>
       <div class="hero-video reveal">
         <video id="promo" src="assets/ada-promo.mp4" poster="assets/ada-promo-poster.jpg"
-          muted autoplay loop playsinline preload="auto" aria-label="Ada promo video"></video>
+          muted autoplay loop playsinline preload="auto" aria-label="Ada promo video"
+          title="Ada demo: synced lyrics, focus timer, weather, CPU/RAM and the idle mascot"></video>
         <button class="sound-btn" id="promo-sound" type="button" aria-pressed="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg>
           <span class="lbl-on" data-i18n="hero.sound_on">Sound on</span>
@@ -226,9 +349,9 @@ cargo run --release</code></pre>
     <span><a href="https://github.com/Yemresalcan/ada-notch/blob/main/LICENSE" data-i18n="footer.license">Apache-2.0 licensed</a></span>
   </footer>
 
-  <script src="notch.js?v=9" defer></script>
-  <script src="js/i18n.js?v=9" defer></script>
-  <script src="js/release.js?v=9" defer></script>
-  <script src="main.js?v=9" defer></script>
+  <script src="notch.js?v=10" defer></script>
+  <script src="js/i18n.js?v=10" defer></script>
+  <script src="js/release.js?v=10" defer></script>
+  <script src="main.js?v=10" defer></script>
 </body>
 </html>

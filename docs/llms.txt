@@ -1,0 +1,30 @@
+# Ada
+
+> Ada is a free, open-source "Dynamic Island" for Windows 10 and 11: a small black notch at the top of the screen
+> that shows what you need without opening another window. Native Rust (Direct2D + DirectComposition), ~700 KB,
+> uses no CPU when idle (0 FPS). Apache-2.0.
+
+## What it does
+- Now playing from any app (Windows media controls) with synced lyrics (LRCLIB)
+- Pomodoro focus timer
+- Weather for your location (MET Norway, location by IP, no setup)
+- CPU and RAM monitor
+- File and link shelf: drag files in and out
+- Todo list and a local calendar
+- Windows notification previews ("peeks")
+- An idle mascot that writes "Merhaba" (Turkish for hello) and waves
+- Every page can be turned off in Settings; a minimal mode is available
+
+## Install
+- Download the installer (Ada-Setup-x.y.z.exe) or the portable ada.exe: https://github.com/Yemresalcan/ada-notch/releases/latest
+- No admin rights needed. Windows may show a SmartScreen reputation warning because the app is new and not code-signed yet;
+  verify the download with SHA256SUMS.txt from the same release.
+
+## Privacy
+Everything stays local in %APPDATA%\Ada, no telemetry. Only weather and lyrics are fetched from the network when enabled.
+
+## Links
+- Website: https://yemresalcan.github.io/ada-notch/
+- Source code: https://github.com/Yemresalcan/ada-notch
+- Releases: https://github.com/Yemresalcan/ada-notch/releases
+- Author: Yemresalcan (https://github.com/Yemresalcan, https://x.com/yesdev_exe)

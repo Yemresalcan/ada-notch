@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yemresalcan.github.io/ada-notch/sitemap.xml

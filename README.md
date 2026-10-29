@@ -1,50 +1,129 @@
-# Ada
+<p align="center"><img src="assets/icon/ada_256.png" width="112" alt="Ada icon"></p>
+<h1 align="center">Ada</h1>
+<p align="center"><b>A free, open-source Dynamic Island for Windows 10 &amp; 11.</b><br>
+Native Rust · ~700 KB · 0 FPS when idle</p>
 
-A lightweight, native "Dynamic Island"-style notch for Windows 10 and 11 — written in Rust.
+<p align="center">
+  <a href="https://github.com/Yemresalcan/ada-notch/releases/latest"><img src="https://img.shields.io/github/v/release/Yemresalcan/ada-notch?color=e30a17&amp;label=release" alt="Latest release"></a>
+  <a href="https://github.com/Yemresalcan/ada-notch/releases"><img src="https://img.shields.io/github/downloads/Yemresalcan/ada-notch/total?color=e30a17" alt="Downloads"></a>
+  <a href="https://github.com/Yemresalcan/ada-notch/actions"><img src="https://img.shields.io/github/actions/workflow/status/Yemresalcan/ada-notch/ci.yml?branch=main&amp;label=build" alt="Build status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Yemresalcan/ada-notch?color=blue" alt="License"></a>
+  <a href="#install"><img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows&amp;logoColor=white" alt="Windows 10 | 11"></a>
+  <a href="https://github.com/Yemresalcan/ada-notch/stargazers"><img src="https://img.shields.io/github/stars/Yemresalcan/ada-notch?style=social" alt="GitHub stars"></a>
+</p>
 
-**Website:** https://yemresalcan.github.io/ada-notch/ · [Türkçe](#türkçe)
+<p align="center">
+  <a href="https://github.com/Yemresalcan/ada-notch/releases/latest"><b>Download</b></a> ·
+  <a href="https://yemresalcan.github.io/ada-notch/">Website</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#build-from-source">Build from source</a> ·
+  <a href="#türkçe">Türkçe</a>
+</p>
 
-![Ada](docs/screenshot.png)
+<p align="center"><img src="docs/assets/ada-demo.gif" width="860" alt="Ada demo: the notch opens on hover, synced lyrics, focus timer, weather, CPU/RAM and the idle mascot"></p>
 
 **Ada** places a small black pill at the top-center of your screen that smoothly expands into an interactive panel when you hover over it. Built directly on Win32, Direct2D, and DirectComposition via the `windows` crate, it ships as a single ~700 KB executable with no runtime dependencies and 0 FPS CPU usage when idle. *"Ada"* means *"island"* in Turkish, reflected in its Turkish red-and-white visual identity.
 
 ## Features
 
-Every page can be turned on or off individually in **Settings**:
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/media.png" width="40" alt="Media and lyrics"><br>
+      <b>Media &amp; lyrics</b><br>
+      Now playing from any app via Windows media controls, play/pause/next controls, synced lyrics from <a href="https://lrclib.net">LRCLIB</a>, plus album art and animated audio bars in the collapsed notch.
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/shelf.png" width="40" alt="File shelf"><br>
+      <b>File shelf</b><br>
+      Drag files or links onto the notch to hold them temporarily, drag them back out later, or click to open.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/todo.png" width="40" alt="Todo"><br>
+      <b>Todo</b><br>
+      Quick checklist right at the top of your screen.
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/todo.png" width="40" alt="Calendar"><br>
+      <b>Calendar</b><br>
+      Local calendar for viewing and managing upcoming items.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/focus.png" width="40" alt="Focus timer"><br>
+      <b>Focus timer</b><br>
+      Pomodoro timer (25 / 5 / 15 min) with a live countdown in the collapsed notch.
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/weather.png" width="40" alt="Weather"><br>
+      <b>Weather</b><br>
+      Current conditions and short-term forecast using IP-based location and MET Norway data.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/system.png" width="40" alt="System monitor"><br>
+      <b>System monitor</b><br>
+      Live CPU and RAM usage rings with a 60-second CPU sparkline.
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/football.png" width="40" alt="Football"><br>
+      <b>Football</b> <sub>new · next release</sub><br>
+      Follow one team (Beşiktaş by default): crests, next match and last result; during a live match the score stays in the notch and goals, kick-off and full time pop up. Data: ESPN.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/notify.png" width="40" alt="Notifications"><br>
+      <b>Notifications</b><br>
+      Mirrors Windows notifications as brief animated "peeks".
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/mascot.png" width="40" alt="Idle mascot"><br>
+      <b>Idle mascot</b><br>
+      After 15 seconds of inactivity, Ada writes <i>"Merhaba"</i> in handwriting, reveals two happy eyes, and waves a 3D hand.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/system.png" width="40" alt="Claude usage"><br>
+      <b>Claude usage</b><br>
+      5-hour and weekly rate-limit rings for Claude Code (reads a local JSON file; see <a href="#claude-usage">Claude usage</a>).
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/assets/icons/settings.png" width="40" alt="Settings"><br>
+      <b>Settings</b><br>
+      Turn any page on or off; minimal-notch mode shrinks the idle pill into an unobtrusive compact strip; tray menu for <i>Start with Windows</i>, mascot, minimal mode, and <i>Exit</i>.
+    </td>
+  </tr>
+</table>
 
-- **Media & lyrics** — Now playing from any app via Windows media controls, play/pause/next controls, synced lyrics from [LRCLIB](https://lrclib.net), plus album art and animated audio bars in the collapsed notch.
-- **File shelf** — Drag files or links onto the notch to hold them temporarily, drag them back out later, or click to open.
-- **Todo** — Quick checklist right at the top of your screen.
-- **Calendar** — Local calendar for viewing and managing upcoming items.
-- **Focus timer** — Pomodoro timer (25 / 5 / 15 min) with a live countdown in the collapsed notch.
-- **Weather** — Current conditions and short-term forecast using IP-based location and MET Norway data.
-- **System monitor** — Live CPU and RAM usage rings with a 60-second CPU sparkline.
-- **Claude usage** — 5-hour and weekly rate-limit rings for Claude Code (reads a local JSON file; see [Claude usage](#claude-usage)).
-- **Notifications** — Mirrors Windows notifications as brief animated "peeks".
-- **Settings** — Enable or disable pages and adjust notch behavior at any time.
+Every page can be turned on or off individually in **Settings**; disabled pages never start in the background.
 
-Plus:
+### Screenshots
 
-- **Idle mascot** — After 15 seconds of inactivity, Ada writes *"Merhaba"* in handwriting, reveals two happy eyes, and waves a 3D hand.
-- **Minimal-notch mode** — Shrinks the idle pill into an unobtrusive compact strip.
-- **System tray menu** — Quick toggles for *Start with Windows*, the mascot, minimal mode, and *Exit*.
+<p align="center"><img src="docs/screenshot.png" width="860" alt="Ada panels: Focus, System, Claude, and Settings"></p>
 
-## Download & Install
+## Install
 
-Download `Ada-Setup-x.y.z.exe` from the [Releases](https://github.com/Yemresalcan/ada-notch/releases) page and run it (no admin rights needed; installs to `%LOCALAPPDATA%\Programs\Ada`). A portable `ada.exe` is attached too.
+Download `Ada-Setup-x.y.z.exe` from the [Releases](https://github.com/Yemresalcan/ada-notch/releases) page and run it — no admin rights needed; installs to `%LOCALAPPDATA%\Programs\Ada`. A portable `ada.exe` is attached to every release too.
 
-### Requirements
+**Requirements:** Windows 10 (version 1903 or newer) or Windows 11, 64-bit (x64).
 
-- Windows 10 (version 1903 or newer) or Windows 11
-- 64-bit (x64)
-
-### Why does my browser or Windows warn about the download?
-
-- **Open-source builds:** Ada is open source, and release files are built directly from this repository by [GitHub Actions](https://github.com/Yemresalcan/ada-notch/actions).
-- **Why it happens:** The executable is not code-signed yet and is new, so browsers (Chrome/Edge "uncommon download") and Microsoft Defender SmartScreen ("Windows protected your PC") warn about files they have not seen often. It is a reputation warning, not a virus detection. Code signing for the project is planned.
-- **How to proceed:** In the browser choose **Keep** / **Keep anyway**; in SmartScreen click **More info → Run anyway**.
-- **How to verify the file:** Every release has `SHA256SUMS.txt`; in PowerShell run `Get-FileHash .\Ada-Setup-<version>.exe -Algorithm SHA256` and compare the output with the value in that file.
-- **Optional scan:** You can also scan the file on [VirusTotal](https://www.virustotal.com).
+> [!NOTE]
+> **Why does my browser or Windows warn about the download?**
+>
+> - **Open-source builds:** Ada is open source, and release files are built directly from this repository by [GitHub Actions](https://github.com/Yemresalcan/ada-notch/actions).
+> - **Why it happens:** The executable is not code-signed yet and is new, so browsers (Chrome/Edge *"uncommon download"*) and Microsoft Defender SmartScreen (*"Windows protected your PC"*) warn about files they have not seen often. It is a reputation warning, not a virus detection. Code signing for the project is planned.
+> - **How to proceed:** In the browser choose **Keep** / **Keep anyway**; in SmartScreen click **More info → Run anyway**.
+> - **How to verify the file:** Every release includes `SHA256SUMS.txt`. Run the command below in PowerShell and compare the output with the value in that file (you can also scan the file on [VirusTotal](https://www.virustotal.com)):
+>
+> ```powershell
+> Get-FileHash .\Ada-Setup-<version>.exe -Algorithm SHA256
+> ```
 
 ## Usage
 
@@ -54,7 +133,20 @@ Download `Ada-Setup-x.y.z.exe` from the [Releases](https://github.com/Yemresalca
 - **Toggle features:** Open the **Settings** page (always the last page) to turn individual pages on or off. Disabled pages are not started in the background.
 - **Data location:** Settings, todos, and calendar entries are stored as plain text in `%APPDATA%\Ada` (caches and shelf files live in `%LOCALAPPDATA%\Ada`).
 
-## Claude Usage
+## Configuration
+
+Settings live in `%APPDATA%\Ada\settings.txt` (plain text, one `key=value` per line):
+
+| Key | Description |
+| --- | --- |
+| `disabled` | Comma-separated page IDs to turn off: `media`, `shelf`, `todo`, `calendar`, `focus`, `weather`, `football`, `system`, `claude`, `notifications` |
+| `mascot` | `0` turns the idle mascot off |
+| `minimal` | `1` enables minimal-notch mode |
+| `football_team` | ESPN team ID (default `1895` = Beşiktaş) |
+| `football_keep_open` | `0` = don't keep the notch open during a live match |
+| `claude_usage_file` | Path to the Claude usage JSON file |
+
+### Claude usage
 
 The **Claude usage** page displays your remaining 5-hour and weekly Claude Code rate limits as progress rings.
 
@@ -72,7 +164,15 @@ Expected JSON format:
 
 For example, a Claude Code status-line script can write this file directly from its `rate_limits` input on each update. If you don't use Claude Code, you can turn the page off in **Settings**.
 
-## Build from Source
+## Privacy
+
+Everything stays local in `%APPDATA%\Ada` (and `%LOCALAPPDATA%\Ada` for caches and shelf items), with no telemetry. Network requests happen only for enabled features:
+
+- **Weather** — MET Norway forecast data, location by IP
+- **Media & lyrics** — Synced lyrics from [LRCLIB](https://lrclib.net)
+- **Football** — Match schedules, live scores, and crests from ESPN
+
+## Build from source
 
 1. Install [Rust](https://rustup.rs/) via `rustup` (both the `msvc` and `gnu` toolchains work).
 2. Run in development mode:
@@ -87,12 +187,12 @@ For example, a Claude Code status-line script can write this file directly from 
    ```powershell
    powershell -ExecutionPolicy Bypass -File tools/build-release.ps1
    ```
-5. Build the installer (requires [Inno Setup 6](https://jrsoftware.org/isinfo.php)):
+5. Build the installer (requires [Inno Setup 6](https://jrsoftware.org/isinfo.php) or newer):
    ```powershell
    iscc installer/ada.iss
    ```
 
-### Project Layout
+### Project layout
 
 | Path | Description |
 | --- | --- |
@@ -101,24 +201,27 @@ For example, a Claude Code status-line script can write this file directly from 
 | `src/pages/*` | Individual feature pages (one file per page) |
 | `src/mascot.rs` | Idle *"Merhaba"* handwriting animation, eyes, and 3D waving hand |
 | `src/worker.rs` | Background worker threads, UI thread `Waker`, and peek queue |
+| `src/http.rs` | Blocking HTTP GET over WinRT HttpClient (strings and bytes) |
 | `src/store.rs` | Plain-text settings and data persistence |
 | `src/theme.rs` | Layout geometry, spring constants, and color palette |
 | `assets/` | Application icons and mascot artwork |
 | `tools/` | Release packaging (`build-release.ps1`) and icon embedding (`set_icon.py`) |
-| `installer/` | Inno Setup 6 installer script (`ada.iss`) |
+| `installer/` | Inno Setup 6+ installer script (`ada.iss`) |
 
 ## Contributing
 
 Contributions, bug reports, and ideas are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-## License & Credits
+## License
 
 - **License:** Apache-2.0 — see [LICENSE](LICENSE).
 - **Credits & third-party notices:** see [NOTICE](NOTICE).
 
----
+If Ada is useful to you, a ⭐ on GitHub helps others find it.
 
 ## Türkçe
+
+<details><summary><b>Türkçe README'yi göster</b></summary>
 
 Windows 10 ve 11 için Rust ile yazılmış, hafif ve yerel "Dynamic Island" tarzı ekran çentiği (notch).
 
@@ -126,7 +229,7 @@ Windows 10 ve 11 için Rust ile yazılmış, hafif ve yerel "Dynamic Island" tar
 
 ### Özellikler
 
-Her sayfa **Settings** (Ayarlar) sayfasından ayrı ayrı açılıp kapatılabilir:
+Her sayfa **Settings** (Ayarlar) sayfasından ayrı ayrı açılıp kapatılabilir; devre dışı bırakılan sayfalar arka planda başlatılmaz:
 
 - **Medya ve şarkı sözleri (Media & lyrics)** — Windows medya kontrolleri üzerinden çalan herhangi bir uygulamayı gösterir; oynat/duraklat/sonraki tuşları, [LRCLIB](https://lrclib.net) üzerinden senkronize şarkı sözleri ve kapalı çentikte albüm kapağı ile hareketli ses çubukları sunar.
 - **Dosya rafı (File shelf)** — Dosya veya bağlantıları çentiğe sürükleyip bırakın, daha sonra dışarı sürükleyin ya da tıklayarak açın.
@@ -135,6 +238,7 @@ Her sayfa **Settings** (Ayarlar) sayfasından ayrı ayrı açılıp kapatılabil
 - **Odaklanma sayacı (Focus timer)** — Kapalı çentikte geri sayım gösteren Pomodoro sayacı (25 / 5 / 15 dk).
 - **Hava durumu (Weather)** — IP tabanlı konum ve MET Norway verileriyle anlık hava durumu ve saatlik tahmin.
 - **Sistem izleyici (System monitor)** — Canlı CPU ve RAM kullanım halkaları ile 60 saniyelik CPU grafiği (sparkline).
+- **Futbol (Football)** — Tek bir takımı takip edin (varsayılan Beşiktaş): takım armaları, sıradaki maç ve son sonuç; canlı maç sırasında skor çentikte kalır ve gol, başlama vuruşu ile maç sonu bildirim olarak açılır. Veri: ESPN.
 - **Claude kullanımı (Claude usage)** — Claude Code için 5 saatlik ve haftalık kullanım limitlerini halkalar halinde gösterir (yerel bir JSON dosyasını okur; bkz. [Claude Kullanımı](#claude-kullanımı)).
 - **Bildirimler (Notifications)** — Windows bildirimlerini kısa animasyonlu "peek" önizlemeleri olarak yansıtır.
 - **Ayarlar (Settings)** — Sayfaları ve çentik davranışını istediğiniz zaman açıp kapatın.
@@ -170,6 +274,19 @@ Ek olarak:
 - **Özellikleri açıp kapatma:** Her zaman en sonda yer alan **Settings** sayfasından istediğiniz sayfayı etkinleştirin veya devre dışı bırakın.
 - **Veri dizini:** Ayarlar ve kullanıcı verileri `%APPDATA%\Ada` altında (önbellek ve dosya rafı öğeleri `%LOCALAPPDATA%\Ada` altında) saklanır.
 
+### Yapılandırma
+
+Ayarlar `%APPDATA%\Ada\settings.txt` dosyasında düz metin olarak saklanır (her satırda bir `anahtar=değer`):
+
+| Anahtar | Açıklama |
+| --- | --- |
+| `disabled` | Kapatılacak sayfa kimlikleri (virgülle ayrılmış): `media`, `shelf`, `todo`, `calendar`, `focus`, `weather`, `football`, `system`, `claude`, `notifications` |
+| `mascot` | `0` boşta maskotunu kapatır |
+| `minimal` | `1` minimal çentik modunu açar |
+| `football_team` | ESPN takım kimliği (varsayılan `1895` = Beşiktaş) |
+| `football_keep_open` | `0` = canlı maç sırasında çentiği açık tutma |
+| `claude_usage_file` | Claude kullanım JSON dosyasının yolu |
+
 ### Claude Kullanımı
 
 **Claude usage** sayfası, Claude Code'un 5 saatlik ve haftalık kalan kullanım haklarını halka göstergeler olarak sunar.
@@ -188,6 +305,10 @@ Beklenen JSON biçimi:
 
 Örneğin bir Claude Code durum çubuğu (status-line) betiği, kendisine gelen `rate_limits` girdisini doğrudan bu dosyaya yazabilir. Claude Code kullanmıyorsanız bu sayfayı **Settings** altından kapatabilirsiniz.
 
+### Gizlilik
+
+Tüm veriler yerel olarak `%APPDATA%\Ada` (önbellek ve dosya rafı öğeleri `%LOCALAPPDATA%\Ada`) altında tutulur; telemetri toplanmaz. Ağ istekleri yalnızca etkinleştirilmiş özellikler için yapılır: hava durumu (MET Norway, IP ile konum), şarkı sözleri ([LRCLIB](https://lrclib.net)) ve futbol (ESPN).
+
 ### Kaynaktan Derleme
 
 1. `rustup` ile [Rust](https://rustup.rs/) kurun (`msvc` ve `gnu` araç zincirlerinin ikisiyle de derlenir).
@@ -203,7 +324,7 @@ Beklenen JSON biçimi:
    ```powershell
    powershell -ExecutionPolicy Bypass -File tools/build-release.ps1
    ```
-5. Kurulum paketini oluşturun ([Inno Setup 6](https://jrsoftware.org/isinfo.php) gerekir):
+5. Kurulum paketini oluşturun ([Inno Setup 6](https://jrsoftware.org/isinfo.php) veya üzeri gerekir):
    ```powershell
    iscc installer/ada.iss
    ```
@@ -217,11 +338,12 @@ Beklenen JSON biçimi:
 | `src/pages/*` | Özellik sayfaları (her sayfa için ayrı dosya) |
 | `src/mascot.rs` | Boşta *"Merhaba"* el yazısı animasyonu, gözler ve 3B el sallama |
 | `src/worker.rs` | Arka plan iş parçacıkları, arayüz `Waker` köprüsü ve "peek" kuyruğu |
+| `src/http.rs` | WinRT HttpClient üzerinden bloklayan HTTP GET istemcisi (metin ve bayt) |
 | `src/store.rs` | Düz metin tabanlı ayar ve veri kalıcılığı |
 | `src/theme.rs` | Geometri, yay sabitleri ve renk paleti |
 | `assets/` | Uygulama simgeleri ve maskot görselleri |
 | `tools/` | Sürüm derleme (`build-release.ps1`) ve simge gömme (`set_icon.py`) betikleri |
-| `installer/` | Inno Setup 6 kurulum betiği (`ada.iss`) |
+| `installer/` | Inno Setup 6+ kurulum betiği (`ada.iss`) |
 
 ### Katkıda Bulunma
 
@@ -231,3 +353,5 @@ Katkılarınızı, hata bildirimlerinizi ve önerilerinizi bekliyoruz! Bir pull 
 
 - **Lisans:** Apache-2.0 — ayrıntılar için [LICENSE](LICENSE) dosyasına bakın.
 - **Üçüncü taraf bildirimleri ve veri kaynakları:** [NOTICE](NOTICE) dosyasına bakın.
+
+</details>

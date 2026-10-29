@@ -86,6 +86,13 @@ pub trait Page {
         false
     }
 
+    /// True while something on this page should stay in view (e.g. a live
+    /// match). The shell then switches to this page once and keeps the notch
+    /// expanded until it returns false.
+    fn keep_open(&self) -> bool {
+        false
+    }
+
     fn on_focus_lost(&mut self) -> bool {
         false
     }

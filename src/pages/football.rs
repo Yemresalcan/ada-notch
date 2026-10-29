@@ -1,4 +1,5 @@
-//! Follows one football team: live score, last result and next match.
+//! Follows one football team: live score, next match and last result, drawn
+//! like a match header with the two team crests.
 //!
 //! Data comes from ESPN's public JSON (no key): the team schedule (results and
 //! fixtures) of a few leagues, plus the per-match summary while a match is on.
@@ -7,9 +8,14 @@
 //! polls the live match every 30 s (from 10 minutes before kick-off until the
 //! match is over). Network errors keep the last good data. Goals, kick-off and
 //! full time raise a peek; the collapsed notch shows a live activity while a
-//! match is on. The worker stops when the page is dropped.
+//! match is on. Crests (ESPN logos) are downloaded by the worker once and
+//! cached under the local Ada data folder (`football`). The worker stops when
+//! the page is dropped.
 
+use std::collections::hash_map::DefaultHasher;
 use std::collections::{BTreeMap, HashMap};
+use std::fs;
+use std::hash::{Hash, Hasher};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::sync::Arc;
@@ -28,6 +34,9 @@ use crate::worker::{self, Peek, Waker};
 
 const SETTINGS_FILE: &str = "settings.txt";
 const SETTINGS_KEY: &str = "football_team";
+/// "0" turns off keeping the notch open during a live match.
+const KEEP_OPEN_KEY: &str = "football_keep_open";
+const CREST_RETRY: Duration = Duration::from_secs(30 * 60);
 const DEFAULT_TEAM: &str = "1895";
 const LEAGUES: [&str; 5] = [
     "tur.1",
@@ -51,9 +60,6 @@ const PEEK_SECONDS: f32 = 6.0;
 const GLYPH_BALL: &str = "\u{26BD}";
 const GLYPH_FLAG: &str = "\u{1F3C1}";
 const DAYS: [&str; 7] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MONTHS: [&str; 12] = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
 
 // ---------------------------------------------------------------------------
 // Data model and parsing
@@ -104,6 +110,24 @@ struct Snapshot {
     last: Option<Event>,
     next: Option<Event>,
     live: Option<Event>,
+    /// PNG crests by team id, for the two teams of the shown match.
+    crests: BTreeMap<String, Arc<Vec<u8>>>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Shown {
+    Live,
+    Next,
+    Last,
+}
+
+/// The match the page shows: live if any, else the next one, else the last.
+fn shown(snap: &Snapshot) -> Option<(&Event, Shown)> {
+    snap.live
+        .as_ref()
+        .map(|e| (e, Shown::Live))
+        .or_else(|| snap.next.as_ref().map(|e| (e, Shown::Next)))
+        .or_else(|| snap.last.as_ref().map(|e| (e, Shown::Last)))
 }
 
 fn league_name(code: &str) -> &'static str {
@@ -352,6 +376,7 @@ fn snapshot(events: &[Event], team: &str, now: i64) -> Snapshot {
         last: last.cloned(),
         next: next.cloned(),
         live: live.cloned(),
+        crests: BTreeMap::new(),
     }
 }
 
@@ -510,25 +535,25 @@ fn local_offset_secs() -> i64 {
     }
 }
 
-/// "Today · 19:00", "Tomorrow · 19:00" or "Sun 1 Nov · 19:00" (local time).
-fn fmt_when(ts: i64, now: i64, offset: i64) -> String {
+/// "01.11.2026" (local date).
+fn fmt_date(ts: i64, offset: i64) -> String {
+    let (y, m, d) = days_to_ymd((ts + offset).div_euclid(86_400));
+    format!("{d:02}.{m:02}.{y}")
+}
+
+/// "Today 19:00", "Tomorrow 19:00" or "Sun 19:00" (local time).
+fn fmt_day_time(ts: i64, now: i64, offset: i64) -> String {
     let local = ts + offset;
     let day = local.div_euclid(86_400);
     let today = (now + offset).div_euclid(86_400);
     let secs = local.rem_euclid(86_400);
     let clock = format!("{:02}:{:02}", secs / 3_600, (secs / 60) % 60);
     if day == today {
-        format!("Today \u{b7} {clock}")
+        format!("Today {clock}")
     } else if day == today + 1 {
-        format!("Tomorrow \u{b7} {clock}")
+        format!("Tomorrow {clock}")
     } else {
-        let (_, month, d) = days_to_ymd(day);
-        format!(
-            "{} {} {} \u{b7} {clock}",
-            DAYS[(day + 4).rem_euclid(7) as usize],
-            d,
-            MONTHS[month - 1]
-        )
+        format!("{} {clock}", DAYS[(day + 4).rem_euclid(7) as usize])
     }
 }
 
@@ -557,6 +582,76 @@ fn fetch_summary(base: &Event) -> Result<Event, String> {
     apply_summary(base, &http::get_json(&url)?).ok_or_else(|| "bad summary".to_string())
 }
 
+fn crest_key(team_id: &str) -> u64 {
+    let mut h = DefaultHasher::new();
+    ("football-crest", team_id).hash(&mut h);
+    h.finish()
+}
+
+/// Crest PNG for an ESPN team id: from the disk cache, else downloaded (small
+/// size via ESPN's image combiner) and cached.
+fn load_crest(team_id: &str) -> Option<Vec<u8>> {
+    const PNG_MAGIC: &[u8] = &[0x89, b'P', b'N', b'G'];
+    if team_id.is_empty() || !team_id.chars().all(|c| c.is_ascii_digit()) {
+        return None;
+    }
+    let dir = store::local_dir().join("football");
+    let path = dir.join(format!("{team_id}.png"));
+    if let Ok(bytes) = fs::read(&path) {
+        if bytes.starts_with(PNG_MAGIC) {
+            return Some(bytes);
+        }
+    }
+    let url = format!(
+        "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/{team_id}.png&h=96&w=96"
+    );
+    let bytes = http::get_bytes(&url).ok().filter(|b| b.starts_with(PNG_MAGIC))?;
+    let _ = fs::create_dir_all(&dir);
+    let _ = fs::write(&path, &bytes);
+    Some(bytes)
+}
+
+/// In-memory crest cache; ids that failed (e.g. 404) are retried only rarely.
+#[derive(Default)]
+struct Crests {
+    have: HashMap<String, Arc<Vec<u8>>>,
+    missing: HashMap<String, Instant>,
+}
+
+impl Crests {
+    fn get(&mut self, team_id: &str) -> Option<Arc<Vec<u8>>> {
+        if let Some(bytes) = self.have.get(team_id) {
+            return Some(bytes.clone());
+        }
+        if self.missing.get(team_id).is_some_and(|t| t.elapsed() < CREST_RETRY) {
+            return None;
+        }
+        match load_crest(team_id) {
+            Some(bytes) => {
+                let bytes = Arc::new(bytes);
+                self.have.insert(team_id.to_string(), bytes.clone());
+                Some(bytes)
+            }
+            None => {
+                self.missing.insert(team_id.to_string(), Instant::now());
+                None
+            }
+        }
+    }
+
+    /// Fills `snap.crests` for the two teams of the shown match.
+    fn attach(&mut self, snap: &mut Snapshot) {
+        let ids: Vec<String> = shown(snap)
+            .map(|(e, _)| vec![e.home.id.clone(), e.away.id.clone()])
+            .unwrap_or_default();
+        for id in ids {
+            if let Some(bytes) = self.get(&id) {
+                snap.crests.insert(id, bytes);
+            }
+        }
+    }
+}
+
 struct Tracker {
     team: String,
     closed: Arc<AtomicBool>,
@@ -569,6 +664,7 @@ struct Tracker {
     fetched: Option<Instant>,
     fetch_ok: bool,
     loaded: bool,
+    crests: Crests,
 }
 
 impl Tracker {
@@ -654,7 +750,9 @@ impl Tracker {
                 events = self.events();
             }
             let msg = if self.loaded {
-                Ok(snapshot(&events, &self.team, now))
+                let mut snap = snapshot(&events, &self.team, now);
+                self.crests.attach(&mut snap);
+                Ok(snap)
             } else {
                 Err("Couldn't load matches".to_string())
             };
@@ -736,13 +834,19 @@ fn badge_colors(side: &Side) -> (Color, Color) {
     (bg, fg)
 }
 
-fn draw_badge(ctx: &mut DrawCtx, r: Rect, side: &Side) {
+/// Team crest in `r`; without a downloaded crest, a colored badge with the
+/// team abbreviation.
+fn draw_crest(ctx: &mut DrawCtx, r: Rect, side: &Side, crest: Option<&Arc<Vec<u8>>>) {
+    if let Some(bytes) = crest {
+        ctx.image_dynamic(crest_key(&side.id), bytes, r, 1.0);
+        return;
+    }
     let (bg, fg) = badge_colors(side);
     ctx.fill_rect(r, r.h / 2.0, bg);
     ctx.text(
         &side.abbr,
         r,
-        TextStyle::new(9.5, Weight::Bold, fg).align(Align::Center),
+        TextStyle::new((r.h * 0.3).clamp(9.5, 14.0), Weight::Bold, fg).align(Align::Center),
     );
 }
 
@@ -760,15 +864,83 @@ pub struct FootballPage {
     rx: Receiver<Result<Snapshot, String>>,
     closed: Arc<AtomicBool>,
     state: Load,
+    keep_open: bool,
+}
+
+/// Development aid (`ADA_FOOTBALL_DEMO=1`): a fake live match plus a next and
+/// a last match, with real crests, and a goal peek.
+fn run_demo(tx: Sender<Result<Snapshot, String>>, waker: Waker) {
+    let side = |id: &str, abbr: &str, name: &str, score| Side {
+        id: id.into(),
+        abbr: abbr.into(),
+        name: name.into(),
+        color: None,
+        alt: None,
+        score,
+    };
+    let event = |id: &str, ts, state, detail: &str, home, away| Event {
+        id: id.into(),
+        league: "tur.1",
+        ts,
+        state,
+        detail: detail.into(),
+        clock: detail.into(),
+        home,
+        away,
+    };
+    let now = unix_now();
+    let live = event(
+        "demo",
+        now - 70 * 60,
+        MatchState::In,
+        "67'",
+        side(DEFAULT_TEAM, "BES", "Besiktas", Some(2)),
+        side("432", "GS", "Galatasaray", Some(1)),
+    );
+    let next = event(
+        "demo-next",
+        now + 26 * 3_600,
+        MatchState::Pre,
+        "",
+        side("6870", "KAS", "Kasimpasa", None),
+        side(DEFAULT_TEAM, "BES", "Besiktas", None),
+    );
+    let last = event(
+        "demo-last",
+        now - 6 * 86_400,
+        MatchState::Post,
+        "FT",
+        side(DEFAULT_TEAM, "BES", "Besiktas", Some(2)),
+        side("7914", "IBFK", "Istanbul BB", Some(0)),
+    );
+    worker::peek(peek_for(Change::Goal { ours: true }, &live, DEFAULT_TEAM));
+    let mut crests = Crests::default();
+    let mut snap = Snapshot {
+        team_id: DEFAULT_TEAM.into(),
+        name: Some("Besiktas".into()),
+        last: Some(last),
+        next: Some(next),
+        live: Some(live),
+        crests: BTreeMap::new(),
+    };
+    for id in ["1895", "432", "6870", "7914"] {
+        if let Some(bytes) = crests.get(id) {
+            snap.crests.insert(id.to_string(), bytes);
+        }
+    }
+    let _ = tx.send(Ok(snap));
+    waker.wake();
 }
 
 impl FootballPage {
     pub fn new(waker: Waker) -> Self {
-        let team = store::read_kv(SETTINGS_FILE)
+        let settings = store::read_kv(SETTINGS_FILE);
+        let team = settings
             .get(SETTINGS_KEY)
             .filter(|v| !v.is_empty() && v.chars().all(|c| c.is_ascii_digit()))
             .cloned()
             .unwrap_or_else(|| DEFAULT_TEAM.to_string());
+        let keep_open = settings.get(KEEP_OPEN_KEY).map_or(true, |v| v != "0");
         let (tx, rx) = mpsc::channel();
         let closed = Arc::new(AtomicBool::new(false));
         let tracker = Tracker {
@@ -780,39 +952,10 @@ impl FootballPage {
             fetched: None,
             fetch_ok: false,
             loaded: false,
+            crests: Crests::default(),
         };
         if std::env::var_os("ADA_FOOTBALL_DEMO").is_some() {
-            // Development aid: a fake live match and a goal peek, to check the live layout.
-            worker::spawn("football-demo", move || {
-                let side = |id: &str, abbr: &str, name: &str, score| Side {
-                    id: id.into(),
-                    abbr: abbr.into(),
-                    name: name.into(),
-                    color: None,
-                    alt: None,
-                    score: Some(score),
-                };
-                let ev = Event {
-                    id: "demo".into(),
-                    league: "tur.1",
-                    ts: unix_now() - 70 * 60,
-                    state: MatchState::In,
-                    detail: "67'".into(),
-                    clock: "67'".into(),
-                    home: side(DEFAULT_TEAM, "BES", "Besiktas", 2),
-                    away: side("432", "GS", "Galatasaray", 1),
-                };
-                worker::peek(peek_for(Change::Goal { ours: true }, &ev, DEFAULT_TEAM));
-                let snap = Snapshot {
-                    team_id: DEFAULT_TEAM.into(),
-                    name: Some("Besiktas".into()),
-                    last: None,
-                    next: None,
-                    live: Some(ev),
-                };
-                let _ = tx.send(Ok(snap));
-                waker.wake();
-            });
+            worker::spawn("football-demo", move || run_demo(tx, waker));
         } else {
             worker::spawn("football", move || tracker.run(tx, waker));
         }
@@ -820,6 +963,7 @@ impl FootballPage {
             rx,
             closed,
             state: Load::Loading,
+            keep_open,
         }
     }
 
@@ -829,137 +973,107 @@ impl FootballPage {
             _ => None,
         }
     }
+}
 
-    fn draw_live(&self, ctx: &mut DrawCtx, area: Rect, ev: &Event) {
-        let cx = area.x + area.w / 2.0;
-        let row_y = area.y + 4.0;
-        let badge = |x: f32| Rect::new(x, row_y + 6.0, 34.0, 20.0);
-        draw_badge(ctx, badge(area.x), &ev.home);
-        draw_badge(ctx, badge(area.right() - 34.0), &ev.away);
-
-        let name_style = TextStyle::new(12.0, Weight::Semibold, theme::TEXT);
-        let name_w = (cx - 44.0 - (area.x + 40.0)).max(0.0);
+/// Sofascore-style match header: crests and names left/right, details centered.
+fn draw_match(ctx: &mut DrawCtx, area: Rect, snap: &Snapshot, ev: &Event, kind: Shown) {
+    const SIDE_W: f32 = 90.0;
+    let (now, offset) = (unix_now(), local_offset_secs());
+    let columns = [
+        (&ev.home, Rect::new(area.x, area.y, SIDE_W, area.h)),
+        (&ev.away, Rect::new(area.right() - SIDE_W, area.y, SIDE_W, area.h)),
+    ];
+    for (side, col) in columns {
+        let crest = Rect::new(col.x + (col.w - 40.0) / 2.0, area.y + 6.0, 40.0, 40.0);
+        draw_crest(ctx, crest, side, snap.crests.get(&side.id));
         ctx.text(
-            &ev.home.name,
-            Rect::new(area.x + 40.0, row_y, name_w, 32.0),
-            name_style.align(Align::Right),
-        );
-        ctx.text(
-            &ev.away.name,
-            Rect::new(cx + 44.0, row_y, name_w, 32.0),
-            name_style,
-        );
-
-        let score = format!(
-            "{} \u{2013} {}",
-            ev.home.score.unwrap_or(0),
-            ev.away.score.unwrap_or(0)
-        );
-        ctx.text(
-            &score,
-            Rect::new(cx - 42.0, row_y, 84.0, 32.0),
-            TextStyle::new(24.0, Weight::Bold, theme::TEXT).align(Align::Center),
-        );
-
-        let minute = minute_label(ev);
-        let (label, color) = if minute == "HT" {
-            ("\u{25CF} HT".to_string(), theme::TEXT_DIM)
-        } else {
-            (
-                format!("\u{25CF} LIVE {minute}").trim_end().to_string(),
-                theme::DANGER,
-            )
-        };
-        ctx.text(
-            &label,
-            Rect::new(area.x, row_y + 36.0, area.w, 18.0),
-            TextStyle::new(12.0, Weight::Semibold, color).align(Align::Center),
-        );
-        ctx.text(
-            league_name(ev.league),
-            Rect::new(area.x, row_y + 56.0, area.w, 16.0),
-            TextStyle::new(11.0, Weight::Regular, theme::TEXT_FAINT).align(Align::Center),
+            &side.name,
+            Rect::new(col.x + 2.0, area.y + 51.0, col.w - 4.0, 16.0),
+            TextStyle::new(12.0, Weight::Medium, theme::TEXT).align(Align::Center),
         );
     }
 
-    fn draw_card(
-        &self,
-        ctx: &mut DrawCtx,
-        card: Rect,
-        title: &str,
-        ev: Option<&Event>,
-        team: &str,
-        last: bool,
-    ) {
-        ctx.fill_rect(card, 10.0, theme::CARD);
-        ctx.text(
-            title,
-            Rect::new(card.x + 10.0, card.y + 6.0, card.w - 20.0, 14.0),
-            TextStyle::new(10.0, Weight::Semibold, theme::TEXT_FAINT),
-        );
-        let Some(ev) = ev else {
-            let empty = if last {
-                "No recent match"
-            } else {
-                "No upcoming match"
-            };
+    let mid = Rect::new(area.x + SIDE_W, area.y, (area.w - 2.0 * SIDE_W).max(0.0), area.h);
+    let row = |y: f32, h: f32| Rect::new(mid.x, area.y + y, mid.w, h);
+    let center = |size: f32, weight: Weight, color: Color| {
+        TextStyle::new(size, weight, color).align(Align::Center)
+    };
+    let faint = center(10.5, Weight::Regular, theme::TEXT_FAINT);
+    match kind {
+        Shown::Next => {
             ctx.text(
-                empty,
-                card,
-                TextStyle::new(11.5, Weight::Medium, theme::TEXT_DIM).align(Align::Center),
+                &fmt_date(ev.ts, offset),
+                row(6.0, 22.0),
+                center(15.0, Weight::Bold, theme::TEXT),
             );
-            return;
-        };
-        let (_, opp, home) = ours(ev, team);
-        draw_badge(
-            ctx,
-            Rect::new(card.x + 10.0, card.y + 24.0, 34.0, 20.0),
-            opp,
-        );
-
-        let main = Rect::new(card.x + 52.0, card.y + 22.0, (card.w - 62.0).max(0.0), 24.0);
-        let sub = Rect::new(card.x + 10.0, card.y + 48.0, card.w - 20.0, 16.0);
-        let comp = Rect::new(card.x + 10.0, card.y + 65.0, card.w - 20.0, 14.0);
-        let sub_style = TextStyle::new(11.5, Weight::Medium, theme::TEXT_DIM);
-        if last {
-            match result_of(ev, team) {
-                Some((r, a, b)) => {
-                    let color = match r {
-                        'W' => theme::ACCENT,
-                        'L' => theme::DANGER,
-                        _ => theme::TEXT_DIM,
-                    };
-                    ctx.text(
-                        &format!("{r} {a}\u{2013}{b}"),
-                        main,
-                        TextStyle::new(16.0, Weight::Bold, color),
-                    );
-                }
-                None => ctx.text(
-                    "Played",
-                    main,
-                    TextStyle::new(14.0, Weight::Bold, theme::TEXT_DIM),
-                ),
+            ctx.text(
+                &fmt_day_time(ev.ts, now, offset),
+                row(28.0, 16.0),
+                center(12.0, Weight::Medium, theme::TEXT_DIM),
+            );
+            ctx.text(league_name(ev.league), row(46.0, 14.0), faint);
+            if let Some(last) = &snap.last {
+                draw_last_line(ctx, row(64.0, 14.0), last, &snap.team_id);
             }
-            ctx.text(&opp.name, sub, sub_style);
-        } else {
-            let line = format!("{} {}", if home { "vs" } else { "@" }, opp.name);
-            ctx.text(
-                &line,
-                main,
-                TextStyle::new(12.5, Weight::Semibold, theme::TEXT),
-            );
-            ctx.text(
-                &fmt_when(ev.ts, unix_now(), local_offset_secs()),
-                sub,
-                sub_style,
-            );
         }
-        ctx.text(
-            league_name(ev.league),
-            comp,
-            TextStyle::new(10.0, Weight::Regular, theme::TEXT_FAINT),
-        );
+        Shown::Live | Shown::Last => {
+            let score = format!(
+                "{} \u{2013} {}",
+                ev.home.score.unwrap_or(0),
+                ev.away.score.unwrap_or(0)
+            );
+            ctx.text(&score, row(4.0, 34.0), center(26.0, Weight::Bold, theme::TEXT));
+            let minute = minute_label(ev);
+            let (label, color) = match kind {
+                Shown::Live if minute == "HT" => ("\u{25CF} HT".to_string(), theme::TEXT_DIM),
+                Shown::Live => (
+                    format!("\u{25CF} LIVE {minute}").trim_end().to_string(),
+                    theme::DANGER,
+                ),
+                _ => ("FT".to_string(), theme::TEXT_DIM),
+            };
+            ctx.text(&label, row(40.0, 16.0), center(12.0, Weight::Semibold, color));
+            let comp = if kind == Shown::Last {
+                format!("{} \u{b7} {}", league_name(ev.league), fmt_date(ev.ts, offset))
+            } else {
+                league_name(ev.league).to_string()
+            };
+            ctx.text(&comp, row(58.0, 14.0), faint);
+        }
+    }
+}
+
+/// "Last: W 2-0 Istanbul BB" with a colored result; dropped if it does not fit.
+fn draw_last_line(ctx: &mut DrawCtx, r: Rect, last: &Event, team: &str) {
+    let Some((res, a, b)) = result_of(last, team) else { return };
+    let (_, opp, _) = ours(last, team);
+    let color = match res {
+        'W' => theme::ACCENT,
+        'L' => theme::DANGER,
+        _ => theme::TEXT_DIM,
+    };
+    let parts = [
+        ("Last: ".to_string(), theme::TEXT_FAINT),
+        (format!("{res} {a}\u{2013}{b}"), color),
+        (format!(" {}", opp.name), theme::TEXT_FAINT),
+    ];
+    let styles: Vec<TextStyle> = parts
+        .iter()
+        .map(|(_, c)| TextStyle::new(10.5, Weight::Medium, *c))
+        .collect();
+    let widths: Vec<f32> = parts
+        .iter()
+        .zip(&styles)
+        .map(|((t, _), st)| ctx.measure_text(t, st))
+        .collect();
+    let total: f32 = widths.iter().sum();
+    if total > r.w {
+        return;
+    }
+    let mut x = r.x + (r.w - total) / 2.0;
+    for (((text, _), style), w) in parts.iter().zip(styles).zip(widths) {
+        ctx.text(text, Rect::new(x, r.y, w + 2.0, r.h), style);
+        x += w;
     }
 }
 
@@ -1004,15 +1118,14 @@ impl Page for FootballPage {
             Load::Failed => return ctx.text("Couldn't load matches", area, dim),
             Load::Ready(s) => s,
         };
-        if let Some(ev) = &snap.live {
-            self.draw_live(ctx, area, ev);
-            return;
+        match shown(snap) {
+            Some((ev, kind)) => draw_match(ctx, area, snap, ev, kind),
+            None => ctx.text("No matches found", area, dim),
         }
-        let (left, rest) = area.split_left((area.w - 8.0) / 2.0);
-        let (_, right) = rest.split_left(8.0);
-        let (left, right) = (left.inset(0.0, 2.0), right.inset(0.0, 2.0));
-        self.draw_card(ctx, left, "LAST", snap.last.as_ref(), &snap.team_id, true);
-        self.draw_card(ctx, right, "NEXT", snap.next.as_ref(), &snap.team_id, false);
+    }
+
+    fn keep_open(&self) -> bool {
+        self.keep_open && self.live().is_some()
     }
 
     fn activity(&self) -> Option<Activity> {
@@ -1215,11 +1328,39 @@ mod tests {
     fn formats_local_times() {
         let ts = parse_iso("2026-11-01T16:00Z").unwrap();
         let three_h = 3 * 3_600;
-        assert_eq!(
-            fmt_when(ts, ts - 30 * 86_400, three_h),
-            "Sun 1 Nov \u{b7} 19:00"
-        );
-        assert_eq!(fmt_when(ts, ts - 3_600, three_h), "Today \u{b7} 19:00");
-        assert_eq!(fmt_when(ts, ts - 86_400, three_h), "Tomorrow \u{b7} 19:00");
+        assert_eq!(fmt_date(ts, three_h), "01.11.2026");
+        // 22:00 UTC is already the next day in UTC+3.
+        assert_eq!(fmt_date(ts + 6 * 3_600, three_h), "02.11.2026");
+        assert_eq!(fmt_day_time(ts, ts - 30 * 86_400, three_h), "Sun 19:00");
+        assert_eq!(fmt_day_time(ts, ts - 3_600, three_h), "Today 19:00");
+        assert_eq!(fmt_day_time(ts, ts - 86_400, three_h), "Tomorrow 19:00");
+    }
+
+    #[test]
+    fn shows_live_then_next_then_last() {
+        let mut snap = Snapshot {
+            team_id: "1895".into(),
+            name: None,
+            last: Some(ev("l", 1, MatchState::Post, 2, 0)),
+            next: Some(ev("n", 9, MatchState::Pre, 0, 0)),
+            live: Some(ev("v", 5, MatchState::In, 1, 1)),
+            crests: BTreeMap::new(),
+        };
+        let id_kind = |s: &Snapshot| shown(s).map(|(e, k)| (e.id.clone(), k));
+        assert_eq!(id_kind(&snap), Some(("v".to_string(), Shown::Live)));
+        snap.live = None;
+        assert_eq!(id_kind(&snap), Some(("n".to_string(), Shown::Next)));
+        snap.next = None;
+        assert_eq!(id_kind(&snap), Some(("l".to_string(), Shown::Last)));
+        snap.last = None;
+        assert!(shown(&snap).is_none());
+    }
+
+    #[test]
+    fn crest_ids_are_safe_and_keys_stable() {
+        assert!(load_crest("../x").is_none());
+        assert!(load_crest("").is_none());
+        assert_eq!(crest_key("1895"), crest_key("1895"));
+        assert_ne!(crest_key("1895"), crest_key("432"));
     }
 }

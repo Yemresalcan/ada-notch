@@ -107,6 +107,8 @@ struct App {
     peek_display: Option<Peek>,
     /// True while an OLE drag (files or a link) is over the notch.
     dragging: bool,
+    /// True while a page asks to stay in view (`Page::keep_open`, e.g. a live match).
+    pinned: bool,
 }
 
 thread_local! {
@@ -160,9 +162,38 @@ impl App {
             .filter_map(|(i, p)| p.activity().map(|a| (i, a.priority)))
             .max_by_key(|&(_, priority)| priority)
             .map(|(i, _)| i);
+        self.update_pin();
         self.update_targets();
         if self.activity_animating() {
             self.start_animation();
+        }
+    }
+
+    /// Follows `Page::keep_open`: switch to that page and stay expanded while it
+    /// asks, then collapse unless the user is still on the notch.
+    fn update_pin(&mut self) {
+        let want = self.pages.iter().position(|p| p.keep_open());
+        match (want, self.pinned) {
+            (Some(i), false) => {
+                self.pinned = true;
+                // Don't pull the page away from under someone typing.
+                if !self.keyboard {
+                    self.go_to(i);
+                }
+                self.set_expanded(true);
+            }
+            (None, true) => {
+                self.pinned = false;
+                // Peeks that queued up while expanded are stale (e.g. goals already
+                // seen on the scoreboard); keep only the latest, such as "Full time".
+                while self.peeks.len() > 1 {
+                    self.peeks.pop_front();
+                }
+                if !self.hovering && !self.keyboard && !self.dragging && !self.cursor_inside() {
+                    self.set_expanded(false);
+                }
+            }
+            _ => {}
         }
     }
 
@@ -585,7 +616,7 @@ impl App {
         if self.cursor_inside() {
             self.hovering = true;
             self.track_leave();
-        } else if !self.keyboard && !self.dragging && !self.pages[self.current].editing() {
+        } else if !self.keyboard && !self.dragging && !self.pinned && !self.pages[self.current].editing() {
             self.set_expanded(false);
         }
     }
@@ -690,7 +721,7 @@ impl App {
         }
         self.keyboard = false;
         self.pages[self.current].on_focus_lost();
-        if !self.hovering {
+        if !self.hovering && !self.pinned {
             self.set_expanded(false);
         }
         if !self.animating {
@@ -1093,6 +1124,7 @@ pub fn run() -> Result<()> {
             peek: None,
             peek_display: None,
             dragging: false,
+            pinned: false,
         };
         app.reload_settings();
         app.width.snap(app.width.target);

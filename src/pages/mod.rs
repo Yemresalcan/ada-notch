@@ -12,6 +12,7 @@
 mod calendar;
 mod claude;
 mod focus;
+mod football;
 mod media;
 mod notifications;
 mod settings;
@@ -156,6 +157,7 @@ pub const FEATURES: &[(&str, &str)] = &[
     ("calendar", "Calendar"),
     ("focus", "Focus timer"),
     ("weather", "Weather"),
+    ("football", "Football"),
     ("system", "System monitor"),
     ("claude", "Claude usage"),
     ("notifications", "Notifications"),
@@ -190,6 +192,7 @@ pub fn build(
             "calendar" => Box::new(calendar::CalendarPage::new(waker)),
             "focus" => Box::new(focus::FocusPage::new(waker)),
             "weather" => Box::new(weather::WeatherPage::new(waker)),
+            "football" => Box::new(football::FootballPage::new(waker)),
             "system" => Box::new(system::SystemPage::new(waker)),
             "claude" => Box::new(claude::ClaudePage::new(waker)),
             "notifications" => Box::new(notifications::NotificationsPage::new(waker)),

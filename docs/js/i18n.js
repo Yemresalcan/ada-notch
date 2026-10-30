@@ -23,6 +23,7 @@
       "hero.cta2": "GitHub'da yıldız ver",
       "hero.meta": "v{version} · ~700 KB · Kurulum yönetici izni istemez",
       "hero.hint": "Üstteki çentiğin üzerine gel",
+      "hero.hint_touch": "Üstteki çentiğe dokun",
       "hero.sound_on": "Sesi aç",
       "hero.sound_off": "Sesi kapat",
 
@@ -103,6 +104,7 @@
       "hero.cta2": "Star on GitHub",
       "hero.meta": "v{version} · ~700 KB · No admin rights required",
       "hero.hint": "Hover the notch above",
+      "hero.hint_touch": "Tap the notch above",
       "hero.sound_on": "Sound on",
       "hero.sound_off": "Sound off",
 

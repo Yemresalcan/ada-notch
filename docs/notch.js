@@ -15,6 +15,7 @@
       cond: "Parçalı bulutlu · İstanbul",
       peekTitle: "Merhaba!",
       peekBody: "Ada'ya hoş geldin — çentiğin üzerine gel",
+      peekBodyTouch: "Ada'ya hoş geldin — çentiğe dokun",
       days: ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"],
       months: ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
     },
@@ -29,6 +30,7 @@
       cond: "Partly cloudy · Istanbul",
       peekTitle: "Merhaba!",
       peekBody: "Welcome to Ada — hover the notch",
+      peekBodyTouch: "Welcome to Ada — tap the notch",
       days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
       months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     },
@@ -36,6 +38,7 @@
   const lang = () => (document.documentElement.lang || "tr").startsWith("tr") ? "tr" : "en";
   const t = () => T[lang()];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const touch = matchMedia("(hover: none)").matches;
 
   const ring = (r, color, frac, cls = "") => {
     const c = 2 * Math.PI * r;
@@ -54,7 +57,7 @@
       </div>
       <div class="ada-layer ada-peek">
         <div class="ada-bubble"><img src="assets/hand.png" alt=""></div>
-        <div><b data-k="peekTitle">${s.peekTitle}</b><span data-k="peekBody">${s.peekBody}</span></div>
+        <div><b data-k="peekTitle">${s.peekTitle}</b><span data-k="${touch ? "peekBodyTouch" : "peekBody"}">${touch ? s.peekBodyTouch : s.peekBody}</span></div>
       </div>
       <div class="ada-layer ada-panel">
         <div class="ada-head">

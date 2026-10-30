@@ -229,6 +229,11 @@ img { display: block; }
 .hint-arrow { display: inline-block; animation: nudge 1.6s ease-in-out infinite; color: var(--red-hot); }
 @keyframes nudge { 50% { transform: translateY(-5px); } }
 body.notch-touched .hint { opacity: 0; }
+.hint-touch { display: none; }
+@media (hover: none) {
+  .hint-hover { display: none; }
+  .hint-touch { display: inline; }
+}
 .eyebrow {
   margin: 0 0 22px;
   font: 500 13px/1 var(--mono);
@@ -537,6 +542,10 @@ section { padding: 0 clamp(16px, 4vw, 40px); }
   .card-wide { grid-column: auto; grid-row: auto; }
   .nav .btn-small { display: none; }
   .features, .mascot, .opensource, .faq, .download { padding-top: 96px; }
+  /* Phones: the nav row sits below the notch (peek is 64 x 0.8 = 51 px tall). */
+  .nav { padding-top: 56px; }
+  .hint { top: 112px; }
+  .hero { padding-top: 168px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
